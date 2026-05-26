@@ -1,0 +1,16 @@
+---
+description: C.A.S.A security-sensitive work
+globs:
+  - "**/*.{ts,tsx,js,jsx,md,yml,yaml,json}"
+alwaysApply: false
+---
+
+Apply C.A.S.A security policies when touching auth, permissions, secrets, public APIs, logs, uploads or infrastructure.
+
+Required:
+
+- validate external input
+- keep authorization server-side
+- avoid logging secrets or sensitive data
+- update threat model or security notes when risk changes
+- run relevant sensors

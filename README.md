@@ -4,6 +4,8 @@ C.A.S.A is an agent-native architecture method for building, governing and moder
 
 It is not a framework, a prompt pack or a single starter template. C.A.S.A is an operating layer that gives agents the right context, boundaries, reusable capabilities and validation gates so AI-assisted delivery stays maintainable.
 
+C.A.S.A can be used as the architecture layer for governed vibe coding: humans keep intent and judgment, agents get structured context and guardrails, and automation checks whether the work stayed inside the method.
+
 **Core principle:** Design for agents. Govern for humans. Evolve for legacy.
 
 ## Why It Exists
@@ -26,6 +28,30 @@ C.A.S.A turns ad hoc agent work into governed software delivery.
 - **Architecture**: boundaries, dependency direction, API contracts, ownership and modernization paths.
 - **Stack**: replaceable stack guidance for frontend, backend, database, DevOps, testing and docs.
 - **Automation**: doctor checks, generated adapter sync checks, CI gates, sensors, security scans and drift detection.
+
+## IDE And Agent Examples
+
+C.A.S.A is designed to work across agent surfaces instead of locking a project into one IDE.
+
+Examples are included for:
+
+- Codex
+- Cursor
+- Claude Code
+- Devin
+- GitHub Copilot
+- Antigravity-style workflow agents
+- Continue
+- Windsurf-style workspace rules
+- Trae
+- Kilo Code
+- generic CLI agents
+- generic web chat agents
+- MCP-aware agents
+
+Start with `docs/agent-ide-examples.md` and `examples/ide-adapters`.
+
+The rule is simple: keep `.casa` as the source of truth, then translate it into the instruction format each agent understands.
 
 ## Quick Start
 
@@ -99,6 +125,7 @@ Start with `templates/brownfield-overlay`.
 - `.codex`, `.cursor`, `.agents` — generated tool-specific outputs.
 - `templates` — starter structures for greenfield and brownfield adoption.
 - `examples` — practical usage examples.
+- `examples/ide-adapters` — examples for Codex, Cursor, Claude, Devin, Copilot and generic agents.
 - `docs` — concise human-readable documentation.
 
 ## Governance

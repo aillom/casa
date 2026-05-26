@@ -1,0 +1,7 @@
+# Legacy Kilo Code Rules
+
+This file is included only for legacy Kilo Code compatibility.
+
+Prefer `AGENTS.md`, `CONTEXT.md` and `kilo.jsonc` for new projects.
+
+Core rule: use `.casa` as the source of truth and run `npm run check` before completion.

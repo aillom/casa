@@ -1,0 +1,14 @@
+---
+description: C.A.S.A project context
+alwaysApply: true
+---
+
+This repository follows C.A.S.A - Context, Architecture, Stack & Automation.
+
+Before editing files:
+
+1. Read `AGENTS.md`.
+2. Read `casa.manifest.yaml`.
+3. Use `.casa` as the source of truth.
+4. Do not edit generated adapter files directly.
+5. Run `npm run check` before completion.

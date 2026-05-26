@@ -5,6 +5,9 @@ const requiredPaths = [
   "README.md",
   "LICENSE",
   "AGENTS.md",
+  "docs/vibe-coding-architecture.md",
+  "docs/agent-ide-examples.md",
+  "examples/ide-adapters/README.md",
   "casa.manifest.yaml",
   ".casa/kernel/principles/context.md",
   ".casa/kernel/principles/architecture.md",
@@ -262,6 +265,45 @@ function assertSensors() {
   }
 }
 
+function assertIdeExamples() {
+  let localFailures = 0
+  const exampleFiles = [
+    "examples/ide-adapters/universal/AGENTS.md",
+    "examples/ide-adapters/codex/AGENTS.md",
+    "examples/ide-adapters/codex/.codex/skills/casa-skill-router/SKILL.md",
+    "examples/ide-adapters/cursor/.cursor/rules/00-casa-context.mdc",
+    "examples/ide-adapters/claude/CLAUDE.md",
+    "examples/ide-adapters/claude/.claude/settings.json",
+    "examples/ide-adapters/devin/knowledge/casa-core.md",
+    "examples/ide-adapters/github-copilot/.github/copilot-instructions.md",
+    "examples/ide-adapters/antigravity/workflows/implement-feature.md",
+    "examples/ide-adapters/antigravity/.agents/rules/casa-core.md",
+    "examples/ide-adapters/antigravity/.agents/workflows/implement-feature.md",
+    "examples/ide-adapters/windsurf/.windsurf/rules/casa-core.md",
+    "examples/ide-adapters/trae/AGENTS.md",
+    "examples/ide-adapters/trae/.agents/casa-core.md",
+    "examples/ide-adapters/kilo-code/AGENTS.md",
+    "examples/ide-adapters/kilo-code/CONTEXT.md",
+    "examples/ide-adapters/kilo-code/kilo.jsonc",
+    "examples/ide-adapters/continue/.continue/rules/casa.md",
+    "examples/ide-adapters/windsurf/workspace-rules/casa.md",
+    "examples/ide-adapters/generic-cli/AGENT-GUIDE.md",
+    "examples/ide-adapters/generic-web-chat/casa-system-prompt.md",
+    "examples/ide-adapters/generic-mcp/context-card.md"
+  ]
+
+  for (const exampleFile of exampleFiles) {
+    if (!exists(exampleFile)) {
+      localFailures += 1
+      fail(`Missing IDE adapter example: ${exampleFile}`)
+    }
+  }
+
+  if (localFailures === 0) {
+    pass("IDE and generic agent examples exist")
+  }
+}
+
 assertRequiredPaths()
 assertManifest()
 assertAgentsFile()
@@ -271,6 +313,7 @@ assertPolicies()
 assertGeneratedAdapters()
 assertContextMaps()
 assertSensors()
+assertIdeExamples()
 
 if (failures > 0) {
   console.error(`C.A.S.A doctor failed with ${failures} failure(s) and ${warnings} warning(s).`)

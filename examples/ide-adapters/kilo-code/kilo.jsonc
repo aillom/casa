@@ -1,0 +1,9 @@
+{
+  // Kilo Code can load additional instruction sources from kilo.jsonc.
+  "instructions": [
+    "./AGENTS.md",
+    "./CONTEXT.md",
+    "./docs/vibe-coding-architecture.md",
+    "./docs/agent-ide-examples.md"
+  ]
+}
