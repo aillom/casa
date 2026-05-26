@@ -78,7 +78,9 @@ const requiredPackagePaths = [
   "scripts/casa.mjs",
   "scripts/casa-doctor.mjs",
   "scripts/generate-adapters.mjs",
-  "scripts/test-cli.mjs"
+  "scripts/test-cli.mjs",
+  "casa",
+  "casa.cmd"
 ]
 
 const requiredPaths = isCasaPackageRepo() ? [...requiredCorePaths, ...requiredPackagePaths] : requiredCorePaths

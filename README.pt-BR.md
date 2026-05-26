@@ -122,30 +122,32 @@ Instale o C.A.S.A em um projeto novo ou existente:
 mkdir my-app
 cd my-app
 npx @aillomai/casa init --mode greenfield
-npx @aillomai/casa doctor
+./casa doctor
 ```
 
 Neste repositório:
 
 ```bash
 npm ci
-npm run casa -- check
+./casa check
 ```
 
 C.A.S.A agora expõe uma CLI local pequena:
 
 ```bash
-npm run casa -- init ../my-app --mode greenfield
-npm run casa -- doctor
-npm run casa -- check
-npm run casa -- generate adapters
-npm run casa -- generate adapters --check
-npm run casa -- mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
-npm run casa -- capsule list
-npm run casa -- gate list
+./casa init ../my-app --mode greenfield
+./casa doctor
+./casa check
+./casa commands
+./casa generate adapters
+./casa generate adapters --check
+./casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
+./casa capsule list
+./casa gate list
 ```
 
 O pacote npm expõe a mesma interface via `npx @aillomai/casa ...`.
+Projetos inicializados também recebem o atalho local `./casa` e `.casa/commands.md`.
 
 As instruções de publicação estão em [docs/publishing.md](docs/publishing.md).
 
@@ -153,8 +155,8 @@ As instruções de publicação estão em [docs/publishing.md](docs/publishing.m
 
 1. Edite primeiro os arquivos do C.A.S.A Core, normalmente em `.casa`.
 2. Atualize specs, policies, docs ou exemplos quando comportamento mudar.
-3. Rode `npm run casa -- generate adapters` após mudar arquivos Core que afetam adapters.
-4. Rode `npm run casa -- check` antes de abrir ou mergear um PR.
+3. Rode `./casa generate adapters` após mudar arquivos Core que afetam adapters.
+4. Rode `./casa check` antes de abrir ou mergear um PR.
 5. Não edite arquivos de adapter gerados diretamente.
 
 Saídas geradas incluem:
@@ -253,7 +255,7 @@ Sensors definem a validação esperada antes da conclusão:
 - risco de dependência
 - security scan
 
-`npm run casa -- doctor` verifica se a estrutura mínima C.A.S.A, policies, specs, context maps, sensors, mission-control, context capsules, quality gates, registries e adapters gerados estão presentes e sincronizados. Neste repositório-fonte, ele também valida os exemplos de IDE.
+`./casa doctor` verifica se a estrutura mínima C.A.S.A, policies, specs, context maps, sensors, mission-control, context capsules, quality gates, registries e adapters gerados estão presentes e sincronizados. Neste repositório-fonte, ele também valida os exemplos de IDE.
 
 ## Exemplos E Documentação
 

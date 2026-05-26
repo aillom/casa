@@ -9,13 +9,14 @@ It is intentionally small in v0.1. The goal is to make C.A.S.A operable without 
 From this repository:
 
 ```bash
-npm run casa -- init ../my-app --mode greenfield
-npm run casa -- doctor
-npm run casa -- check
-npm run casa -- generate adapters
-npm run casa -- mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
-npm run casa -- capsule list
-npm run casa -- gate list
+./casa init ../my-app --mode greenfield
+./casa doctor
+./casa check
+./casa commands
+./casa generate adapters
+./casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
+./casa capsule list
+./casa gate list
 ```
 
 ## npx Usage
@@ -24,6 +25,14 @@ After publishing as an npm package, the same commands are available through `npx
 
 ```bash
 npx @aillomai/casa init --mode greenfield
+./casa doctor
+./casa check
+./casa commands
+```
+
+Without the local shortcut:
+
+```bash
 npx @aillomai/casa doctor
 npx @aillomai/casa check
 npx @aillomai/casa generate adapters
@@ -40,10 +49,14 @@ It copies:
 
 - `AGENTS.md`
 - `casa.manifest.yaml`
+- `casa`
+- `casa.cmd`
 - `.casa`
 - `.agents`
 - `.codex`
 - `.cursor`
+
+It also creates `.casa/commands.md`, a short command cheat sheet for the project.
 
 Useful options:
 
@@ -51,6 +64,16 @@ Useful options:
 - `--adapters claude,github-copilot,kilo-code`
 - `--adapters all`
 - `--force`
+
+### `casa commands`
+
+Prints the short command cheat sheet:
+
+```bash
+./casa doctor
+./casa check
+./casa mission new first-feature --title "First Feature"
+```
 
 ### `casa doctor`
 

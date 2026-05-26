@@ -1,6 +1,6 @@
 {
   "name": "@aillomai/casa",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "C.A.S.A — Context, Architecture, Stack & Automation",
   "license": "Apache-2.0",
   "type": "module",
@@ -38,6 +38,8 @@
     "GOVERNANCE.md",
     "CITATION.cff",
     "casa.manifest.yaml",
+    "casa",
+    "casa.cmd",
     "scripts",
     ".casa",
     ".agents",

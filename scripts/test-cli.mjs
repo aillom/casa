@@ -46,6 +46,16 @@ try {
     console.error("CLI help must include init command.")
     process.exit(1)
   }
+  if (!help.stdout.includes("casa commands")) {
+    console.error("CLI help must include commands command.")
+    process.exit(1)
+  }
+
+  const commands = run(["commands"], tempRoot)
+  if (!commands.stdout.includes("./casa doctor")) {
+    console.error("CLI commands output must include local shortcuts.")
+    process.exit(1)
+  }
 
   const initHelp = run(["init", "--help"], tempRoot)
   if (!initHelp.stdout.includes("C.A.S.A init")) {
@@ -62,6 +72,9 @@ try {
   assertExists(path.join(projectRoot, ".agents/casa-agent-guide.md"))
   assertExists(path.join(projectRoot, ".codex/skills/casa-skill-router/SKILL.md"))
   assertExists(path.join(projectRoot, ".cursor/rules/00-casa-context.mdc"))
+  assertExists(path.join(projectRoot, "casa"))
+  assertExists(path.join(projectRoot, "casa.cmd"))
+  assertExists(path.join(projectRoot, ".casa/commands.md"))
 
   run(["doctor"], projectRoot)
   run(["check"], projectRoot)

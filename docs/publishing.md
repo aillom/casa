@@ -21,7 +21,7 @@ After publishing, users should be able to run:
 ```bash
 npx @aillomai/casa --help
 npx @aillomai/casa init --mode greenfield
-npx @aillomai/casa doctor
+./casa doctor
 npx @aillomai/casa generate adapters
 ```
 
@@ -105,7 +105,8 @@ npx @aillomai/casa --help
 tmpdir=$(mktemp -d)
 cd "$tmpdir"
 npx @aillomai/casa init --mode greenfield
-npx @aillomai/casa doctor
+./casa doctor
+./casa check
 ```
 
 ## CLI Install Flow
@@ -116,12 +117,14 @@ The intended project setup is:
 mkdir my-app
 cd my-app
 npx @aillomai/casa init --mode greenfield --adapters codex,cursor,claude
-npx @aillomai/casa doctor
+./casa doctor
+./casa mission new first-feature --title "First Feature"
 ```
 
 The current package provides:
 
 - `init`
+- `commands`
 - `doctor`
 - `check`
 - `generate adapters`

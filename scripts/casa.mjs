@@ -14,6 +14,7 @@ function printHelp() {
 
 Usage:
   casa init [target-dir] [--mode greenfield|brownfield|hybrid] [--adapters codex,cursor,generic,claude,...|all] [--force]
+  casa commands
   casa doctor
   casa check
   casa generate adapters [--check]
@@ -23,12 +24,40 @@ Usage:
 
 Commands:
   init                Install the C.A.S.A control-plane overlay into a project.
+  commands            Print short local commands and aliases.
   doctor              Validate C.A.S.A structure and governance.
   check               Run structure check, adapter sync check and doctor.
   generate adapters   Generate agent-specific adapter outputs.
   mission new         Create a mission file from the mission template.
   capsule list        List available context capsules.
   gate list           List available quality gates.
+`)
+}
+
+function printCommands() {
+  console.log(`C.A.S.A command shortcuts
+
+Install in a project:
+  npx @aillomai/casa init
+  npx @aillomai/casa init --mode brownfield
+  npx @aillomai/casa init --adapters all
+
+After init, use the local shortcut:
+  ./casa doctor
+  ./casa check
+  ./casa mission new first-feature --title "First Feature"
+  ./casa generate adapters --check
+  ./casa capsule list
+  ./casa gate list
+
+Without the local shortcut:
+  npx @aillomai/casa doctor
+  npx @aillomai/casa check
+
+Optional global install:
+  npm install -g @aillomai/casa
+  casa init
+  casa doctor
 `)
 }
 
@@ -224,8 +253,75 @@ function writeCopyPlan(plan, force) {
 
   for (const file of plan) {
     fs.mkdirSync(path.dirname(file.targetPath), { recursive: true })
-    fs.copyFileSync(file.sourcePath, file.targetPath)
+    if (Object.hasOwn(file, "content")) {
+      fs.writeFileSync(file.targetPath, file.content)
+    } else {
+      fs.copyFileSync(file.sourcePath, file.targetPath)
+    }
+    if (file.mode) {
+      fs.chmodSync(file.targetPath, file.mode)
+    }
   }
+}
+
+function commandShortcutFiles(targetRoot) {
+  const shellShortcut = `#!/usr/bin/env sh
+set -eu
+
+exec npx --yes @aillomai/casa "$@"
+`
+  const windowsShortcut = `@echo off\r
+npx --yes @aillomai/casa %*\r
+`
+  const commandsGuide = `# C.A.S.A Commands
+
+Use these short commands from the project root after running \`casa init\`.
+
+## Daily
+
+\`\`\`bash
+./casa doctor
+./casa check
+./casa generate adapters --check
+\`\`\`
+
+## Missions
+
+\`\`\`bash
+./casa mission new first-feature --title "First Feature" --mode greenfield
+./casa mission new legacy-auth --title "Legacy Auth" --mode brownfield
+\`\`\`
+
+## Discovery
+
+\`\`\`bash
+./casa capsule list
+./casa gate list
+\`\`\`
+
+## Without Local Shortcut
+
+\`\`\`bash
+npx @aillomai/casa doctor
+npx @aillomai/casa check
+\`\`\`
+`
+
+  return [
+    {
+      targetPath: path.join(targetRoot, "casa"),
+      content: shellShortcut,
+      mode: 0o755
+    },
+    {
+      targetPath: path.join(targetRoot, "casa.cmd"),
+      content: windowsShortcut
+    },
+    {
+      targetPath: path.join(targetRoot, ".casa/commands.md"),
+      content: commandsGuide
+    }
+  ]
 }
 
 function adapterSources(adapterNames) {
@@ -292,7 +388,7 @@ function createInit(args) {
     { from: ".cursor", to: ".cursor" }
   ]
   const sources = [...coreSources, ...adapterSources(adapters)]
-  const plan = buildCopyPlan(sources, targetRoot)
+  const plan = [...buildCopyPlan(sources, targetRoot), ...commandShortcutFiles(targetRoot)]
 
   fs.mkdirSync(targetRoot, { recursive: true })
   writeCopyPlan(plan, force)
@@ -300,8 +396,9 @@ function createInit(args) {
   console.log(`Installed C.A.S.A in ${path.relative(process.cwd(), targetRoot) || "."}`)
   console.log(`Mode: ${mode}`)
   console.log("Next:")
-  console.log("  casa doctor")
-  console.log("  casa mission new first-mission --title \"First Mission\"")
+  console.log("  ./casa doctor")
+  console.log("  ./casa mission new first-mission --title \"First Mission\"")
+  console.log("  ./casa commands")
 }
 
 function createMission(args) {
@@ -374,6 +471,11 @@ if (!command || command === "help" || command === "--help" || command === "-h") 
 
 if (command === "init") {
   createInit([subcommand, ...rest].filter(Boolean))
+  process.exit(0)
+}
+
+if (command === "commands" || command === "cmd") {
+  printCommands()
   process.exit(0)
 }
 

@@ -2,6 +2,12 @@
 
 All notable changes to C.A.S.A will be documented in this file.
 
+## 0.1.2
+
+- Add local command shortcut files: `casa`, `casa.cmd` and `.casa/commands.md`.
+- Add `casa commands` to print the short command cheat sheet.
+- Update docs to prefer `./casa ...` after initialization.
+
 ## 0.1.1
 
 - Add `casa init` for installing the C.A.S.A overlay into new or existing projects.
