@@ -22,10 +22,10 @@ npm run casa -- gate list
 After publishing as an npm package, the same commands should become:
 
 ```bash
-npx @aillom/casa doctor
-npx @aillom/casa check
-npx @aillom/casa generate adapters
-npx @aillom/casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
+npx @aillomai/casa doctor
+npx @aillomai/casa check
+npx @aillomai/casa generate adapters
+npx @aillomai/casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
 ```
 
 ## Commands

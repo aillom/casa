@@ -7,7 +7,7 @@ This guide explains how to publish C.A.S.A so users can run it with `npx`.
 The package is configured as:
 
 ```text
-@aillom/casa
+@aillomai/casa
 ```
 
 The CLI binary is:
@@ -19,15 +19,15 @@ casa
 After publishing, users should be able to run:
 
 ```bash
-npx @aillom/casa --help
-npx @aillom/casa doctor
-npx @aillom/casa generate adapters
+npx @aillomai/casa --help
+npx @aillomai/casa doctor
+npx @aillomai/casa generate adapters
 ```
 
 ## One-Time npm Setup
 
 1. Create or use an npm account.
-2. Join or create the `@aillom` npm organization.
+2. Use an npm account that owns the `@aillomai` user scope or has publish access to it.
 3. Log in locally:
 
 ```bash
@@ -35,7 +35,7 @@ npm login
 npm whoami
 ```
 
-4. Confirm you can publish scoped public packages under `@aillom`.
+4. Confirm you can publish scoped public packages under `@aillomai`.
 
 ## Pre-Publish Checks
 
@@ -73,14 +73,16 @@ Check:
 
 ```bash
 npm whoami
-npm org ls aillom
-npm access get status @aillom/casa
+npm access get status @aillomai/casa
 ```
 
-For a locked-down org, create a granular npm access token with publish rights for the `@aillom` scope, then publish with:
+For a locked-down account, create a granular npm access token with publish rights for the `@aillomai` scope, then publish with a temporary npm config:
 
 ```bash
-npm publish --access public --//registry.npmjs.org/:_authToken=YOUR_TOKEN
+tmp_npmrc=$(mktemp)
+printf '%s\n' '//registry.npmjs.org/:_authToken=YOUR_TOKEN' > "$tmp_npmrc"
+npm publish --access public --userconfig "$tmp_npmrc"
+rm -f "$tmp_npmrc"
 ```
 
 For later releases:
@@ -98,8 +100,8 @@ Use `minor` or `major` instead of `patch` when the CLI or method contract change
 After publishing:
 
 ```bash
-npx @aillom/casa --help
-npx @aillom/casa doctor
+npx @aillomai/casa --help
+npx @aillomai/casa doctor
 ```
 
 ## Future CLI Install Flow
@@ -109,8 +111,8 @@ The intended future project setup is:
 ```bash
 mkdir my-app
 cd my-app
-npx @aillom/casa init --mode greenfield --adapters codex,cursor,claude
-npx @aillom/casa doctor
+npx @aillomai/casa init --mode greenfield --adapters codex,cursor,claude
+npx @aillomai/casa doctor
 ```
 
 The current package does not yet implement `init`; it provides the foundation commands first:

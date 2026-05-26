@@ -133,7 +133,7 @@ npm run casa -- capsule list
 npm run casa -- gate list
 ```
 
-O alvo futuro do pacote npm é a mesma interface via `npx @aillom/casa ...`.
+O pacote npm expõe a mesma interface via `npx @aillomai/casa ...`.
 
 As instruções de publicação estão em [docs/publishing.md](docs/publishing.md).
 

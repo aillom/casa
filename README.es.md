@@ -133,7 +133,7 @@ npm run casa -- capsule list
 npm run casa -- gate list
 ```
 
-El objetivo futuro del paquete npm es la misma interfaz vía `npx @aillom/casa ...`.
+El paquete npm expone la misma interfaz vía `npx @aillomai/casa ...`.
 
 Las instrucciones de publicación están en [docs/publishing.md](docs/publishing.md).
 
