@@ -1,6 +1,6 @@
 {
   "name": "@aillomai/casa",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "C.A.S.A — Context, Architecture, Stack & Automation",
   "license": "Apache-2.0",
   "type": "module",
@@ -55,7 +55,8 @@
     "generate": "node scripts/generate-adapters.mjs",
     "generate:check": "node scripts/generate-adapters.mjs --check",
     "doctor": "node scripts/casa-doctor.mjs",
-    "check": "npm run check:structure && npm run generate:check && npm run doctor",
+    "test": "node scripts/test-cli.mjs",
+    "check": "npm run check:structure && npm run generate:check && npm run doctor && npm test",
     "check:structure": "node scripts/check-structure.mjs",
     "prepack": "npm run check"
   },

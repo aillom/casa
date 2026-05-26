@@ -20,6 +20,7 @@ After publishing, users should be able to run:
 
 ```bash
 npx @aillomai/casa --help
+npx @aillomai/casa init --mode greenfield
 npx @aillomai/casa doctor
 npx @aillomai/casa generate adapters
 ```
@@ -101,12 +102,15 @@ After publishing:
 
 ```bash
 npx @aillomai/casa --help
+tmpdir=$(mktemp -d)
+cd "$tmpdir"
+npx @aillomai/casa init --mode greenfield
 npx @aillomai/casa doctor
 ```
 
-## Future CLI Install Flow
+## CLI Install Flow
 
-The intended future project setup is:
+The intended project setup is:
 
 ```bash
 mkdir my-app
@@ -115,8 +119,9 @@ npx @aillomai/casa init --mode greenfield --adapters codex,cursor,claude
 npx @aillomai/casa doctor
 ```
 
-The current package does not yet implement `init`; it provides the foundation commands first:
+The current package provides:
 
+- `init`
 - `doctor`
 - `check`
 - `generate adapters`

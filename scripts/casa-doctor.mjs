@@ -1,19 +1,22 @@
 import fs from "node:fs"
 import { buildAdapterFiles, findAdapterDrift } from "./lib/casa-adapters.mjs"
 
-const requiredPaths = [
-  "README.md",
-  "README.pt-BR.md",
-  "README.es.md",
-  "LICENSE",
+function isCasaPackageRepo() {
+  if (!exists("package.json")) {
+    return false
+  }
+
+  try {
+    const packageJson = JSON.parse(readText("package.json"))
+    return packageJson.name === "@aillomai/casa"
+  } catch {
+    return false
+  }
+}
+
+const requiredCorePaths = [
   "AGENTS.md",
-  "docs/vibe-coding-architecture.md",
-  "docs/cli.md",
-  "docs/publishing.md",
-  "docs/agent-ide-examples.md",
-  "examples/ide-adapters/README.md",
   "casa.manifest.yaml",
-  "scripts/casa.mjs",
   ".casa/kernel/principles/context.md",
   ".casa/kernel/principles/architecture.md",
   ".casa/kernel/principles/stack.md",
@@ -55,7 +58,28 @@ const requiredPaths = [
   ".casa/specs/templates/greenfield-feature/spec.md",
   ".casa/specs/templates/brownfield-modernization/spec.md",
   ".casa/specs/templates/api-endpoint/spec.md",
-  ".casa/specs/templates/security-sensitive-feature/spec.md"
+  ".casa/specs/templates/security-sensitive-feature/spec.md",
+  ".casa/generated/adapters.manifest.json",
+  ".agents/casa-agent-guide.md",
+  ".codex/skills/casa-skill-router/SKILL.md",
+  ".cursor/rules/00-casa-context.mdc"
+]
+
+const requiredPackagePaths = [
+  "README.md",
+  "README.pt-BR.md",
+  "README.es.md",
+  "LICENSE",
+  "CHANGELOG.md",
+  "docs/vibe-coding-architecture.md",
+  "docs/cli.md",
+  "docs/publishing.md",
+  "docs/agent-ide-examples.md",
+  "examples/ide-adapters/README.md",
+  "scripts/casa.mjs",
+  "scripts/casa-doctor.mjs",
+  "scripts/generate-adapters.mjs",
+  "scripts/test-cli.mjs"
 ]
 
 const requiredManifestSnippets = [
@@ -97,6 +121,7 @@ function exists(filePath) {
 }
 
 function assertRequiredPaths() {
+  const requiredPaths = isCasaPackageRepo() ? [...requiredCorePaths, ...requiredPackagePaths] : requiredCorePaths
   const missing = requiredPaths.filter((filePath) => !exists(filePath))
 
   if (missing.length > 0) {
@@ -392,6 +417,28 @@ function assertIdeExamples() {
   }
 }
 
+function assertProjectAdapters() {
+  let localFailures = 0
+  const adapterFiles = [
+    ".agents/casa-agent-guide.md",
+    ".codex/skills/casa-skill-router/SKILL.md",
+    ".cursor/rules/00-casa-context.mdc",
+    ".casa/generated/adapters/generic/AGENT-GUIDE.md",
+    ".casa/generated/adapters/codex/SKILLS.md"
+  ]
+
+  for (const adapterFile of adapterFiles) {
+    if (!exists(adapterFile)) {
+      localFailures += 1
+      fail(`Missing project adapter output: ${adapterFile}`)
+    }
+  }
+
+  if (localFailures === 0) {
+    pass("Project adapter outputs exist")
+  }
+}
+
 assertRequiredPaths()
 assertManifest()
 assertAgentsFile()
@@ -402,7 +449,11 @@ assertGeneratedAdapters()
 assertContextMaps()
 assertSensors()
 assertControlPlaneBlocks()
-assertIdeExamples()
+if (isCasaPackageRepo()) {
+  assertIdeExamples()
+} else {
+  assertProjectAdapters()
+}
 
 if (failures > 0) {
   console.error(`C.A.S.A doctor failed with ${failures} failure(s) and ${warnings} warning(s).`)

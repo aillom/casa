@@ -1,20 +1,21 @@
 import fs from "node:fs"
 
-const requiredPaths = [
-  "README.md",
-  "README.pt-BR.md",
-  "README.es.md",
-  "LICENSE",
+function isCasaPackageRepo() {
+  if (!fs.existsSync("package.json")) {
+    return false
+  }
+
+  try {
+    const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"))
+    return packageJson.name === "@aillomai/casa"
+  } catch {
+    return false
+  }
+}
+
+const requiredCorePaths = [
   "AGENTS.md",
-  "docs/vibe-coding-architecture.md",
-  "docs/cli.md",
-  "docs/publishing.md",
-  "docs/agent-ide-examples.md",
-  "examples/ide-adapters/README.md",
   "casa.manifest.yaml",
-  "scripts/casa.mjs",
-  "scripts/casa-doctor.mjs",
-  "scripts/generate-adapters.mjs",
   ".casa/kernel/principles/context.md",
   ".casa/kernel/principles/architecture.md",
   ".casa/kernel/principles/stack.md",
@@ -56,9 +57,31 @@ const requiredPaths = [
   ".casa/governance/permissions/dangerous-actions.md",
   ".casa/context/repo-map/modules.md",
   ".casa/context/domain-map/domains.md",
-  ".casa/governance/sensors/test.sensor.md"
+  ".casa/governance/sensors/test.sensor.md",
+  ".casa/generated/adapters.manifest.json",
+  ".agents/casa-agent-guide.md",
+  ".codex/skills/casa-skill-router/SKILL.md",
+  ".cursor/rules/00-casa-context.mdc"
 ]
 
+const requiredPackagePaths = [
+  "README.md",
+  "README.pt-BR.md",
+  "README.es.md",
+  "LICENSE",
+  "CHANGELOG.md",
+  "docs/vibe-coding-architecture.md",
+  "docs/cli.md",
+  "docs/publishing.md",
+  "docs/agent-ide-examples.md",
+  "examples/ide-adapters/README.md",
+  "scripts/casa.mjs",
+  "scripts/casa-doctor.mjs",
+  "scripts/generate-adapters.mjs",
+  "scripts/test-cli.mjs"
+]
+
+const requiredPaths = isCasaPackageRepo() ? [...requiredCorePaths, ...requiredPackagePaths] : requiredCorePaths
 const missing = requiredPaths.filter((path) => !fs.existsSync(path))
 
 if (missing.length > 0) {

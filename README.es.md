@@ -116,6 +116,17 @@ Empieza con [docs/agent-ide-examples.md](docs/agent-ide-examples.md) y [examples
 
 ## Inicio Rápido
 
+Instala C.A.S.A en un proyecto nuevo o existente:
+
+```bash
+mkdir my-app
+cd my-app
+npx @aillomai/casa init --mode greenfield
+npx @aillomai/casa doctor
+```
+
+En este repositorio:
+
 ```bash
 npm ci
 npm run casa -- check
@@ -124,6 +135,7 @@ npm run casa -- check
 C.A.S.A ahora expone una pequeña CLI local:
 
 ```bash
+npm run casa -- init ../my-app --mode greenfield
 npm run casa -- doctor
 npm run casa -- check
 npm run casa -- generate adapters
@@ -241,7 +253,7 @@ Los sensors definen la validación esperada antes de completar el trabajo:
 - riesgo de dependencia
 - security scan
 
-`npm run casa -- doctor` verifica que la estructura mínima C.A.S.A, policies, specs, context maps, sensors, mission-control, context capsules, quality gates, registries, ejemplos de IDE y adapters generados estén presentes y sincronizados.
+`npm run casa -- doctor` verifica que la estructura mínima C.A.S.A, policies, specs, context maps, sensors, mission-control, context capsules, quality gates, registries y adapters generados estén presentes y sincronizados. En este repositorio fuente también valida los ejemplos de IDE.
 
 ## Ejemplos Y Documentación
 

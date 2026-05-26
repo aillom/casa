@@ -9,6 +9,7 @@ It is intentionally small in v0.1. The goal is to make C.A.S.A operable without 
 From this repository:
 
 ```bash
+npm run casa -- init ../my-app --mode greenfield
 npm run casa -- doctor
 npm run casa -- check
 npm run casa -- generate adapters
@@ -17,11 +18,12 @@ npm run casa -- capsule list
 npm run casa -- gate list
 ```
 
-## Future npx Usage
+## npx Usage
 
-After publishing as an npm package, the same commands should become:
+After publishing as an npm package, the same commands are available through `npx`:
 
 ```bash
+npx @aillomai/casa init --mode greenfield
 npx @aillomai/casa doctor
 npx @aillomai/casa check
 npx @aillomai/casa generate adapters
@@ -30,9 +32,29 @@ npx @aillomai/casa mission new invoice-dashboard --title "Invoice Dashboard" --m
 
 ## Commands
 
+### `casa init [target-dir]`
+
+Installs the C.A.S.A control-plane overlay into a new or existing project.
+
+It copies:
+
+- `AGENTS.md`
+- `casa.manifest.yaml`
+- `.casa`
+- `.agents`
+- `.codex`
+- `.cursor`
+
+Useful options:
+
+- `--mode greenfield|brownfield|hybrid`
+- `--adapters claude,github-copilot,kilo-code`
+- `--adapters all`
+- `--force`
+
 ### `casa doctor`
 
-Validates the C.A.S.A structure, policies, specs, context maps, generated adapters, Mission Control files, context capsules, quality gates, registries and IDE examples.
+Validates the C.A.S.A structure, policies, specs, context maps, generated adapters, Mission Control files, context capsules, quality gates and registries. In the source repository it also validates IDE examples.
 
 ### `casa check`
 
