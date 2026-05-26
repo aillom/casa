@@ -1,0 +1,64 @@
+name: casa
+version: 0.1.0
+method: Context, Architecture, Stack & Automation
+owner: Aillom
+
+status: early-development
+
+modes:
+  - greenfield
+  - brownfield
+  - hybrid
+
+principles:
+  - Design for agents
+  - Govern for humans
+  - Evolve for legacy
+  - Write once, adapt everywhere
+  - Load capability, not clutter
+
+agent_native:
+  standards:
+    agents_md: true
+    agent_skills: true
+    mcp: true
+    a2a: true
+    openapi: true
+    asyncapi: true
+
+adapters:
+  cursor: true
+  codex: true
+  claude: true
+  devin: true
+  antigravity: true
+  generic: true
+
+context:
+  strategy: progressive
+  max_global_context: small
+  use_skills_on_demand: true
+  use_subagents_for_exploration: true
+  use_code_intelligence: true
+
+governance:
+  require_specs: true
+  require_acceptance_criteria: true
+  require_security_review_for_sensitive_changes: true
+  require_openapi_for_api_changes: true
+  require_tests_for_behavior_changes: true
+  protected_paths:
+    - .github/workflows/**
+    - devops/**
+    - "**/migrations/**"
+    - "**/auth/**"
+    - "**/security/**"
+
+legacy:
+  enabled: true
+  strategy:
+    - discovery
+    - baseline
+    - seams
+    - strangler
+    - retire

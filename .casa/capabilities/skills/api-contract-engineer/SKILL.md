@@ -1,0 +1,15 @@
+---
+name: api-contract-engineer
+description: Use when creating or modifying APIs, Swagger, OpenAPI, DTOs, API errors, pagination or generated clients.
+---
+
+API changes must be contract-first.
+
+Required:
+- Update OpenAPI when API behavior changes.
+- Use versioned routes.
+- Use request and response DTOs.
+- Use standard error model.
+- Include pagination for list endpoints.
+- Document auth requirements.
+- Add contract or integration tests when relevant.

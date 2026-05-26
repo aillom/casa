@@ -1,0 +1,20 @@
+---
+name: backend-clean-architect
+description: Use when creating or modifying backend modules, use cases, services, repositories and domain logic.
+---
+
+Follow Clean Architecture principles.
+
+Layers:
+- domain
+- application
+- infrastructure
+- presentation
+
+Rules:
+- Domain must not import frameworks, Prisma, HTTP or infrastructure.
+- Controllers must not contain business rules.
+- Use cases must not know HTTP.
+- Repositories must hide persistence details.
+- DTOs must not become domain entities.
+- Add tests for behavior changes.

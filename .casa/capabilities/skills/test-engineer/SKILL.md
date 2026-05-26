@@ -1,0 +1,13 @@
+---
+name: test-engineer
+description: Use when adding or changing behavior, APIs, migrations, legacy code or critical flows.
+---
+
+Define the right test level:
+- unit
+- integration
+- contract
+- end-to-end
+- characterization tests for legacy
+
+Prioritize tests that protect behavior and prevent regressions.
