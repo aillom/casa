@@ -1,0 +1,24 @@
+name: Legacy modernization request
+description: Suggest a legacy modernization scenario
+title: "[Legacy]: "
+labels: ["area: legacy"]
+body:
+  - type: textarea
+    id: system
+    attributes:
+      label: Legacy system context
+      description: Describe the type of system, language, architecture and constraints.
+    validations:
+      required: true
+
+  - type: textarea
+    id: risk
+    attributes:
+      label: Main risks
+      description: What makes modernization hard?
+
+  - type: textarea
+    id: desired
+    attributes:
+      label: Desired C.A.S.A support
+      description: What templates, skills or workflows would help?

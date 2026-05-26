@@ -1,0 +1,30 @@
+name: Agent adapter request
+description: Request support for an AI coding agent or tool
+title: "[Adapter]: "
+labels: ["type: adapter"]
+body:
+  - type: input
+    id: tool
+    attributes:
+      label: Tool or agent name
+      placeholder: Cursor, Codex, Claude, Devin, Antigravity, Copilot, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: format
+    attributes:
+      label: Required file format
+      description: What files does this tool use for instructions, skills, rules or workflows?
+
+  - type: textarea
+    id: docs
+    attributes:
+      label: Official docs
+      description: Add official links if available.
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected C.A.S.A output
+      description: What should the adapter generate?

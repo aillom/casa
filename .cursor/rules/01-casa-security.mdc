@@ -1,0 +1,22 @@
+---
+description: C.A.S.A security rules
+globs:
+  - "**/*.{ts,tsx,js,jsx,md,yml,yaml,json}"
+alwaysApply: false
+---
+
+Follow C.A.S.A security policies.
+
+Never:
+- hardcode secrets
+- log tokens, passwords, cookies or sensitive data
+- disable security checks without justification
+- create public endpoints without explicit authorization decision
+- edit production infrastructure without approval
+- modify migrations without risk review
+
+Always:
+- validate external input
+- consider authorization impact
+- update security docs when policies change
+- request security review for high-risk changes

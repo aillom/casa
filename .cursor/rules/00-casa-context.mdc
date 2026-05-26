@@ -1,0 +1,20 @@
+---
+description: C.A.S.A project context
+alwaysApply: true
+---
+
+This repository follows C.A.S.A — Context, Architecture, Stack & Automation.
+
+Core principles:
+- Design for agents.
+- Govern for humans.
+- Evolve for legacy.
+- Write once, adapt everywhere.
+- Load capability, not clutter.
+
+Before changing files:
+1. Read AGENTS.md.
+2. Check casa.manifest.yaml.
+3. Follow the relevant .casa kernel standards and policies.
+4. Do not edit generated adapter files directly.
+5. Update docs, examples or specs when behavior changes.

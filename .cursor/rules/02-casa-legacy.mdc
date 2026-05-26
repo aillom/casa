@@ -1,0 +1,16 @@
+---
+description: C.A.S.A brownfield and legacy rules
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+For legacy or unclear code:
+
+1. Understand before changing.
+2. Map dependencies.
+3. Identify behavior to preserve.
+4. Add characterization tests when possible.
+5. Create seams before refactoring.
+6. Prefer incremental modernization over rewrites.
+7. Document risks and unknowns.
