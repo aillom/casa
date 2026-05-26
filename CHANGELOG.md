@@ -2,6 +2,10 @@
 
 All notable changes to C.A.S.A will be documented in this file.
 
+## 0.1.3
+
+- Split README quick start instructions into new project, existing project and source repository flows.
+
 ## 0.1.2
 
 - Add local command shortcut files: `casa`, `casa.cmd` and `.casa/commands.md`.

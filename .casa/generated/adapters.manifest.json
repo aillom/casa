@@ -79,7 +79,7 @@
         "casa.manifest.yaml",
         "AGENTS.md"
       ],
-      "sourceSha256": "a27a294dcc9f6d8f7ac3bc0756a23fc629e1aba9674c6e9609b5fadf395297a3",
+      "sourceSha256": "80b14a87b8d899b56f451ef3db9a7ec956a2c6e582a5319f5d4c7b596ad6dedc",
       "targetSha256": "dd46b1fd146b3a3f815330ad78c82249c777b5274ddf817cb3ddc3e74af4ea9a"
     },
     {
@@ -88,7 +88,7 @@
         "casa.manifest.yaml",
         ".casa/kernel/policies/secure-coding.md"
       ],
-      "sourceSha256": "65110f60ffb2d988589d6050dcf5e9ca33270ba7c499c8bfa1b8901f3ec90e8e",
+      "sourceSha256": "b384112802f1ea88366cb53e14eca17fa52a19c670489f806866a23f6b677039",
       "targetSha256": "be7f44dffb43cbfc139068456716f618d7efd04122805225be6d8ea466d481b1"
     },
     {
@@ -97,7 +97,7 @@
         "casa.manifest.yaml",
         ".casa/capabilities/workflows/modernize-legacy-module.workflow.md"
       ],
-      "sourceSha256": "8235b570baf811c9be5ce5cd181012296d1f91533bf40e30187870582bf0516b",
+      "sourceSha256": "6d636a27f25eb5be2c0c414afa8c860d1c56cbead71dde9a6a4853e2c3bf344f",
       "targetSha256": "f681433b09b9626b92850b32699810784fdfe03c7aff1d767b950b3eab200357"
     },
     {
@@ -106,7 +106,7 @@
         "AGENTS.md",
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "58ea14fba1ac746838ee6e9b40035ef29668d5cd55a01f2fe9e65a7f1bbd81fe",
+      "sourceSha256": "f218e212ae51dcc0186aa74e877217ce6788c3c5d23bd7e6e45de3fda49dca58",
       "targetSha256": "9e311105aa2f2fab931e5f4694f7f4db38d76b13c3ee24b1faef69536069b4db"
     },
     {
@@ -115,7 +115,7 @@
         "AGENTS.md",
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "58ea14fba1ac746838ee6e9b40035ef29668d5cd55a01f2fe9e65a7f1bbd81fe",
+      "sourceSha256": "f218e212ae51dcc0186aa74e877217ce6788c3c5d23bd7e6e45de3fda49dca58",
       "targetSha256": "9e311105aa2f2fab931e5f4694f7f4db38d76b13c3ee24b1faef69536069b4db"
     },
     {

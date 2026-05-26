@@ -116,23 +116,37 @@ Comece por [docs/agent-ide-examples.md](docs/agent-ide-examples.md) e [examples/
 
 ## Início Rápido
 
-Instale o C.A.S.A em um projeto novo ou existente:
+### Projeto Novo
 
 ```bash
 mkdir my-app
 cd my-app
 npx @aillomai/casa init --mode greenfield
 ./casa doctor
+./casa mission new first-feature --title "First Feature" --mode greenfield
 ```
 
-Neste repositório:
+### Projeto Existente
+
+Na raiz do repositório existente:
+
+```bash
+cd existing-app
+npx @aillomai/casa init --mode brownfield
+./casa doctor
+./casa mission new legacy-discovery --title "Legacy Discovery" --mode brownfield
+```
+
+Use `--force` apenas quando quiser sobrescrever arquivos C.A.S.A já existentes.
+
+### Este Repositório
 
 ```bash
 npm ci
 ./casa check
 ```
 
-C.A.S.A agora expõe uma CLI local pequena:
+C.A.S.A expõe uma CLI local pequena:
 
 ```bash
 ./casa init ../my-app --mode greenfield
