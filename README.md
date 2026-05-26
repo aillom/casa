@@ -118,24 +118,31 @@ Start with [docs/agent-ide-examples.md](docs/agent-ide-examples.md) and [example
 
 ```bash
 npm ci
-npm run check
+npm run casa -- check
 ```
 
-Useful commands:
+C.A.S.A now exposes a small local CLI:
 
 ```bash
-npm run generate        # regenerate agent-specific adapter files
-npm run generate:check  # verify generated adapters are in sync
-npm run doctor          # validate C.A.S.A structure and governance checks
-npm run check           # run structure, generated sync and doctor checks
+npm run casa -- doctor
+npm run casa -- check
+npm run casa -- generate adapters
+npm run casa -- generate adapters --check
+npm run casa -- mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
+npm run casa -- capsule list
+npm run casa -- gate list
 ```
+
+The future npm package target is the same interface through `npx @aillom/casa ...`.
+
+Publishing instructions are in [docs/publishing.md](docs/publishing.md).
 
 ## Daily Workflow
 
 1. Edit C.A.S.A Core files first, usually under `.casa`.
 2. Update specs, policies, docs or examples when behavior changes.
-3. Run `npm run generate` after changing Core files that affect agent adapters.
-4. Run `npm run check` before opening or merging a PR.
+3. Run `npm run casa -- generate adapters` after changing Core files that affect agent adapters.
+4. Run `npm run casa -- check` before opening or merging a PR.
 5. Do not edit generated adapter files directly.
 
 Generated outputs include:
@@ -234,11 +241,13 @@ Sensors define the validation expected before completion:
 - dependency risk
 - security scan
 
-`npm run doctor` checks that the minimum C.A.S.A structure, policies, specs, context maps, sensors, mission-control files, context capsules, quality gates, registries, IDE examples and generated adapters are present and in sync.
+`npm run casa -- doctor` checks that the minimum C.A.S.A structure, policies, specs, context maps, sensors, mission-control files, context capsules, quality gates, registries, IDE examples and generated adapters are present and in sync.
 
 ## Examples And Documentation
 
 - [C.A.S.A as vibe coding architecture](docs/vibe-coding-architecture.md)
+- [C.A.S.A CLI](docs/cli.md)
+- [Publishing to npm](docs/publishing.md)
 - [Agent and IDE examples](docs/agent-ide-examples.md)
 - [C.A.S.A cockpit IA](.casa/cockpit/information-architecture.md)
 - [Greenfield mode](docs/greenfield-mode.md)

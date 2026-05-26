@@ -1,15 +1,63 @@
 {
   "name": "@aillom/casa",
   "version": "0.1.0",
-  "private": true,
   "description": "C.A.S.A — Context, Architecture, Stack & Automation",
   "license": "Apache-2.0",
+  "type": "module",
+  "homepage": "https://github.com/aillom/casa#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/aillom/casa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aillom/casa/issues"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "coding-agents",
+    "architecture",
+    "governance",
+    "vibe-coding",
+    "agent-native",
+    "cli"
+  ],
+  "bin": {
+    "casa": "scripts/casa.mjs"
+  },
+  "files": [
+    "AGENTS.md",
+    "README.md",
+    "README.pt-BR.md",
+    "README.es.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "SUPPORT.md",
+    "CONTRIBUTING.md",
+    "GOVERNANCE.md",
+    "CITATION.cff",
+    "casa.manifest.yaml",
+    "scripts",
+    ".casa",
+    ".agents",
+    ".codex",
+    ".cursor",
+    "docs",
+    "examples",
+    "templates"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
+    "casa": "node scripts/casa.mjs",
     "generate": "node scripts/generate-adapters.mjs",
     "generate:check": "node scripts/generate-adapters.mjs --check",
     "doctor": "node scripts/casa-doctor.mjs",
     "check": "npm run check:structure && npm run generate:check && npm run doctor",
-    "check:structure": "node scripts/check-structure.mjs"
+    "check:structure": "node scripts/check-structure.mjs",
+    "prepack": "npm run check"
   },
   "devDependencies": {}
 }

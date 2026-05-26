@@ -118,24 +118,31 @@ Empieza con [docs/agent-ide-examples.md](docs/agent-ide-examples.md) y [examples
 
 ```bash
 npm ci
-npm run check
+npm run casa -- check
 ```
 
-Comandos útiles:
+C.A.S.A ahora expone una pequeña CLI local:
 
 ```bash
-npm run generate        # regenera archivos de adapter específicos de agentes
-npm run generate:check  # verifica que los adapters generados estén sincronizados
-npm run doctor          # valida la estructura C.A.S.A y los checks de gobernanza
-npm run check           # ejecuta estructura, sync de generación y doctor
+npm run casa -- doctor
+npm run casa -- check
+npm run casa -- generate adapters
+npm run casa -- generate adapters --check
+npm run casa -- mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
+npm run casa -- capsule list
+npm run casa -- gate list
 ```
+
+El objetivo futuro del paquete npm es la misma interfaz vía `npx @aillom/casa ...`.
+
+Las instrucciones de publicación están en [docs/publishing.md](docs/publishing.md).
 
 ## Flujo Diario
 
 1. Edita primero los archivos de C.A.S.A Core, normalmente bajo `.casa`.
 2. Actualiza specs, policies, docs o ejemplos cuando cambie el comportamiento.
-3. Ejecuta `npm run generate` después de cambiar archivos Core que afecten adapters.
-4. Ejecuta `npm run check` antes de abrir o mergear un PR.
+3. Ejecuta `npm run casa -- generate adapters` después de cambiar archivos Core que afecten adapters.
+4. Ejecuta `npm run casa -- check` antes de abrir o mergear un PR.
 5. No edites directamente archivos de adapter generados.
 
 Salidas generadas:
@@ -234,11 +241,13 @@ Los sensors definen la validación esperada antes de completar el trabajo:
 - riesgo de dependencia
 - security scan
 
-`npm run doctor` verifica que la estructura mínima C.A.S.A, policies, specs, context maps, sensors, mission-control, context capsules, quality gates, registries, ejemplos de IDE y adapters generados estén presentes y sincronizados.
+`npm run casa -- doctor` verifica que la estructura mínima C.A.S.A, policies, specs, context maps, sensors, mission-control, context capsules, quality gates, registries, ejemplos de IDE y adapters generados estén presentes y sincronizados.
 
 ## Ejemplos Y Documentación
 
 - [C.A.S.A como arquitectura de vibe coding](docs/vibe-coding-architecture.md)
+- [CLI C.A.S.A](docs/cli.md)
+- [Publicación en npm](docs/publishing.md)
 - [Ejemplos de agentes e IDEs](docs/agent-ide-examples.md)
 - [IA del cockpit C.A.S.A](.casa/cockpit/information-architecture.md)
 - [Modo greenfield](docs/greenfield-mode.md)
