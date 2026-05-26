@@ -2,6 +2,10 @@
 
 All notable changes to C.A.S.A will be documented in this file.
 
+## 0.1.4
+
+- Add AI coding agent harness positioning to README, introduction and npm metadata for discovery.
+
 ## 0.1.3
 
 - Split README quick start instructions into new project, existing project and source repository flows.

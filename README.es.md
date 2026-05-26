@@ -1,12 +1,14 @@
 # C.A.S.A — Context, Architecture, Stack & Automation
 
-**Un control plane de ingeniería agent-native para vibe coding gobernado.**
+**Un control plane de ingeniería agent-native y AI coding agent harness para vibe coding gobernado.**
 
 [English](README.md) | [Português](README.pt-BR.md)
 
 C.A.S.A es un control plane de ingeniería agent-native para equipos que construyen, gobiernan y modernizan software con agentes de código por IA.
 
 No es un framework, un paquete de prompts, un agente de código ni un workflow builder visual. C.A.S.A es la capa arquitectónica que hace que los agentes de código sean utilizables en sistemas reales: contexto estructurado, límites arquitectónicos, capacidades reutilizables, ejecución por missions, gobernanza de riesgo y validación basada en evidencia.
+
+También se puede describir como un **AI coding agent harness**: una capa versionada en el repositorio que entrega contexto, comandos, adapters, policies, missions y validation gates para que los agentes operen con menos suposición y más evidencia.
 
 El objetivo es simple: mantener la velocidad del vibe coding sin perder control de ingeniería.
 
