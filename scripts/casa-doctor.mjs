@@ -3,6 +3,8 @@ import { buildAdapterFiles, findAdapterDrift } from "./lib/casa-adapters.mjs"
 
 const requiredPaths = [
   "README.md",
+  "README.pt-BR.md",
+  "README.es.md",
   "LICENSE",
   "AGENTS.md",
   "docs/vibe-coding-architecture.md",
