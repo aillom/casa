@@ -1,0 +1,16 @@
+workflows:
+  - name: implement-feature
+    path: .casa/capabilities/workflows/implement-feature.workflow.md
+    mission_type: greenfield
+  - name: modernize-legacy-module
+    path: .casa/capabilities/workflows/modernize-legacy-module.workflow.md
+    mission_type: brownfield
+  - name: discovery
+    path: .casa/modernization/discovery/playbook.md
+    mission_type: brownfield
+  - name: baselining
+    path: .casa/modernization/baselining/playbook.md
+    mission_type: brownfield
+  - name: strangler
+    path: .casa/modernization/strangler/playbook.md
+    mission_type: brownfield

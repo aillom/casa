@@ -15,6 +15,7 @@ principles:
   - Govern for humans
   - Evolve for legacy
   - Write once, adapt everywhere
+  - Validate always
   - Load capability, not clutter
 
 agent_native:

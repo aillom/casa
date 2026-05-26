@@ -1,18 +1,20 @@
 # C.A.S.A — Context, Architecture, Stack & Automation
 
-**La capa de arquitectura para vibe coding gobernado.**
+**Un control plane de ingeniería agent-native para vibe coding gobernado.**
 
 [English](README.md) | [Português](README.pt-BR.md)
 
-C.A.S.A es un método de arquitectura agent-native para equipos que construyen, gobiernan y modernizan software con agentes de código por IA.
+C.A.S.A es un control plane de ingeniería agent-native para equipos que construyen, gobiernan y modernizan software con agentes de código por IA.
 
-No es un framework, un paquete de prompts ni una única plantilla inicial. C.A.S.A es una capa operativa que entrega contexto estructurado, límites arquitectónicos, capacidades reutilizables, gobernanza de riesgo y gates de validación para agentes.
+No es un framework, un paquete de prompts, un agente de código ni un workflow builder visual. C.A.S.A es la capa arquitectónica que hace que los agentes de código sean utilizables en sistemas reales: contexto estructurado, límites arquitectónicos, capacidades reutilizables, ejecución por missions, gobernanza de riesgo y validación basada en evidencia.
 
 El objetivo es simple: mantener la velocidad del vibe coding sin perder control de ingeniería.
 
 ## Principio Central
 
 **Diseña para agentes. Gobierna para humanos. Evoluciona para legado.**
+
+**Escribe una vez. Adapta a todas partes. Valida siempre.**
 
 ## Por Qué Existe C.A.S.A
 
@@ -31,7 +33,7 @@ C.A.S.A transforma el trabajo improvisado con agentes en entrega de software gob
 
 ## Cómo Funciona
 
-C.A.S.A separa el conocimiento estable del proyecto de las instrucciones específicas de cada agente.
+C.A.S.A separa el conocimiento estable del proyecto de las instrucciones específicas de cada agente y agrega ejecución basada en missions.
 
 ```text
 .casa Core
@@ -42,6 +44,9 @@ C.A.S.A separa el conocimiento estable del proyecto de las instrucciones especí
   -> workflows
   -> context maps
   -> governance sensors
+  -> quality gates
+  -> mission templates
+  -> context capsules
 
 Adapter generation
   -> Codex skills
@@ -58,6 +63,8 @@ Adapter generation
 
 La regla es: **escribe una vez en `.casa`, adapta a todas partes.**
 
+El resultado es: **toda mission termina con evidencia.**
+
 ## Qué Obtienes
 
 - **Contexto**: `AGENTS.md`, specs, policies, mapas de repositorio, mapas de dominio e instrucciones generadas para agentes.
@@ -66,6 +73,23 @@ La regla es: **escribe una vez en `.casa`, adapta a todas partes.**
 - **Automatización**: doctor checks, sincronización de adapters generados, gates de CI, sensors, escaneos de seguridad y detección de drift.
 - **Gobernanza**: niveles de riesgo, paths protegidos, policies de seguridad, permisos y expectativas de revisión.
 - **Modernización**: discovery, baselining, seams, strangler migration y playbooks de retirement.
+- **Mission Control**: missions, tareas, handoffs, risk gates, agent runs y evidencia.
+- **Quality Gates**: checks versionados para arquitectura, seguridad, contratos de API, calidad de UI y seguridad de legado.
+
+## Módulos Del Control Plane
+
+C.A.S.A 2.1 se organiza en estos bloques:
+
+1. Kernel
+2. Context Fabric
+3. Capability Layer
+4. Mission Control
+5. Protocol Layer
+6. Governance Engine
+7. Modernization Layer
+8. Adapter Layer
+9. Evidence Ledger
+10. Quality Gates
 
 ## IDEs Y Agentes Soportados
 
@@ -161,13 +185,19 @@ Usa C.A.S.A selectivamente en un producto activo:
 - `casa.manifest.yaml`: metadatos del método, adapters habilitados, requisitos de gobernanza y paths protegidos.
 - `.casa/kernel`: fuente de verdad para principios, standards, policies y modelo de riesgo.
 - `.casa/context`: mapas de repositorio, arquitectura, dominio, runtime e inventario legado.
+- `.casa/context-capsules`: paquetes reutilizables de contexto acotado para missions comunes.
 - `.casa/capabilities`: skills, subagents y workflows.
+- `.casa/mission-control`: templates de mission, evidence, handoff, capsule y risk gate.
+- `.casa/runtime/missions`: registros opcionales y persistidos de missions.
 - `.casa/protocols`: alineación con AGENTS.md, Agent Skills, MCP, A2A, OpenAPI y AsyncAPI.
 - `.casa/adapters`: notas de adapter para superficies de agentes soportadas.
 - `.casa/generated`: packs e índices de adapters generados.
 - `.casa/specs`: plantillas reutilizables de especificación.
 - `.casa/modernization`: playbooks de discovery, baselining, seams, strangler y retirement.
 - `.casa/governance`: permisos, archivos protegidos, acciones peligrosas, sensors, evals y audit.
+- `.casa/quality-gates`: checks de calidad versionados para missions y PRs.
+- `.casa/registry`: índices de skills, agentes, adapters, workflows y policies.
+- `.casa/cockpit`: IA y definición de pantallas del futuro control plane visual.
 - `.codex`, `.cursor`, `.agents`: salidas generadas específicas de herramientas.
 - `templates`: estructuras iniciales para adopción greenfield y brownfield.
 - `examples`: ejemplos prácticos de uso.
@@ -204,12 +234,13 @@ Los sensors definen la validación esperada antes de completar el trabajo:
 - riesgo de dependencia
 - security scan
 
-`npm run doctor` verifica que la estructura mínima C.A.S.A, policies, specs, context maps, sensors, ejemplos de IDE y adapters generados estén presentes y sincronizados.
+`npm run doctor` verifica que la estructura mínima C.A.S.A, policies, specs, context maps, sensors, mission-control, context capsules, quality gates, registries, ejemplos de IDE y adapters generados estén presentes y sincronizados.
 
 ## Ejemplos Y Documentación
 
 - [C.A.S.A como arquitectura de vibe coding](docs/vibe-coding-architecture.md)
 - [Ejemplos de agentes e IDEs](docs/agent-ide-examples.md)
+- [IA del cockpit C.A.S.A](.casa/cockpit/information-architecture.md)
 - [Modo greenfield](docs/greenfield-mode.md)
 - [Modo brownfield](docs/brownfield-mode.md)
 - [Ejemplos de IDE adapters](examples/ide-adapters)

@@ -1,0 +1,13 @@
+policies:
+  - name: secure-coding
+    path: .casa/kernel/policies/secure-coding.md
+  - name: api-security
+    path: .casa/kernel/policies/api-security.md
+  - name: database-security
+    path: .casa/kernel/policies/database-security.md
+  - name: infrastructure-security
+    path: .casa/kernel/policies/infrastructure-security.md
+  - name: supply-chain-security
+    path: .casa/kernel/policies/supply-chain-security.md
+  - name: data-protection
+    path: .casa/kernel/policies/data-protection.md

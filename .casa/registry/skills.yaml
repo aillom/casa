@@ -1,0 +1,19 @@
+skills:
+  - name: casa-skill-router
+    path: .casa/capabilities/skills/casa-skill-router/SKILL.md
+  - name: frontend-design-engineer
+    path: .casa/capabilities/skills/frontend-design-engineer/SKILL.md
+  - name: backend-clean-architect
+    path: .casa/capabilities/skills/backend-clean-architect/SKILL.md
+  - name: api-contract-engineer
+    path: .casa/capabilities/skills/api-contract-engineer/SKILL.md
+  - name: database-architect
+    path: .casa/capabilities/skills/database-architect/SKILL.md
+  - name: security-reviewer
+    path: .casa/capabilities/skills/security-reviewer/SKILL.md
+  - name: devops-engineer
+    path: .casa/capabilities/skills/devops-engineer/SKILL.md
+  - name: legacy-archaeologist
+    path: .casa/capabilities/skills/legacy-archaeologist/SKILL.md
+  - name: test-engineer
+    path: .casa/capabilities/skills/test-engineer/SKILL.md

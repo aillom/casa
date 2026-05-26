@@ -1,0 +1,27 @@
+adapters:
+  - name: codex
+    generated: true
+    outputs:
+      - .codex/skills
+      - .casa/generated/adapters/codex
+  - name: cursor
+    generated: true
+    outputs:
+      - .cursor/rules
+  - name: claude
+    generated: true
+    outputs:
+      - .casa/generated/adapters/claude
+  - name: devin
+    generated: true
+    outputs:
+      - .casa/generated/adapters/devin
+  - name: antigravity
+    generated: true
+    outputs:
+      - .casa/generated/adapters/antigravity
+  - name: generic
+    generated: true
+    outputs:
+      - .agents/casa-agent-guide.md
+      - .casa/generated/adapters/generic

@@ -79,8 +79,8 @@
         "casa.manifest.yaml",
         "AGENTS.md"
       ],
-      "sourceSha256": "a73e3497b179567698806fe61f681abb7bb4c9b089b31a6a20ffc17741544752",
-      "targetSha256": "9cf6ea7e909ba60b979bf4eb101c156d07e87f5f7a151352a6a491db4dc32bba"
+      "sourceSha256": "9102e61e20368f418e8b7e1299c2218f5e05edaf95a72b7f496a551848442499",
+      "targetSha256": "dd46b1fd146b3a3f815330ad78c82249c777b5274ddf817cb3ddc3e74af4ea9a"
     },
     {
       "targetPath": ".cursor/rules/01-casa-security.mdc",
@@ -88,7 +88,7 @@
         "casa.manifest.yaml",
         ".casa/kernel/policies/secure-coding.md"
       ],
-      "sourceSha256": "8c8617ab9d330bfa44688d8a59a2da00760de1f903eefa5d74c58d40a0f43ae5",
+      "sourceSha256": "ec0b7f8bbb10c1c80bbcd3ae5c9ba63b47978f304dfe54c03009e0dffa4b19ad",
       "targetSha256": "be7f44dffb43cbfc139068456716f618d7efd04122805225be6d8ea466d481b1"
     },
     {
@@ -97,7 +97,7 @@
         "casa.manifest.yaml",
         ".casa/capabilities/workflows/modernize-legacy-module.workflow.md"
       ],
-      "sourceSha256": "d9fd54da21704ff6f103888a73aa85678c6c0144f692e1917d3139d7749b1c5b",
+      "sourceSha256": "a9c993664ea160bbea0c20b771ab2e135d17b824b9c18d886a4efb3e46c1ee51",
       "targetSha256": "f681433b09b9626b92850b32699810784fdfe03c7aff1d767b950b3eab200357"
     },
     {
@@ -106,7 +106,7 @@
         "AGENTS.md",
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "14920c8d0334ff8d1d9c70bf8fca0c3b3f7ce4cdaf5e268d6e36ac9e39d1ca78",
+      "sourceSha256": "e345cfb1201f68829c6881d4f280214913836cd09a3efb493c4ae1fa3bb45ae9",
       "targetSha256": "9e311105aa2f2fab931e5f4694f7f4db38d76b13c3ee24b1faef69536069b4db"
     },
     {
@@ -115,7 +115,7 @@
         "AGENTS.md",
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "14920c8d0334ff8d1d9c70bf8fca0c3b3f7ce4cdaf5e268d6e36ac9e39d1ca78",
+      "sourceSha256": "e345cfb1201f68829c6881d4f280214913836cd09a3efb493c4ae1fa3bb45ae9",
       "targetSha256": "9e311105aa2f2fab931e5f4694f7f4db38d76b13c3ee24b1faef69536069b4db"
     },
     {

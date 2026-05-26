@@ -1,8 +1,8 @@
 # C.A.S.A As Vibe Coding Architecture
 
-C.A.S.A treats vibe coding as an architecture problem.
+C.A.S.A treats vibe coding as an engineering control-plane problem.
 
-The goal is not to stop fast AI-assisted work. The goal is to make fast work safe enough to survive real projects: clear context, boundaries, specs, policies, tests, generated adapters and validation loops.
+The goal is not to stop fast AI-assisted work. The goal is to make fast work safe enough to survive real projects: clear context, boundaries, specs, policies, missions, tests, quality gates, generated adapters and validation loops.
 
 ## The Problem
 
@@ -18,7 +18,7 @@ Without architecture, vibe coding usually creates:
 
 ## The C.A.S.A Answer
 
-C.A.S.A separates the stable method from the agent-specific surface.
+C.A.S.A separates the stable method from the agent-specific surface and adds mission-based execution with evidence.
 
 ```text
 .casa Core
@@ -29,6 +29,9 @@ C.A.S.A separates the stable method from the agent-specific surface.
   -> workflows
   -> context maps
   -> governance sensors
+  -> quality gates
+  -> mission control
+  -> context capsules
 
 Adapter generation
   -> Codex skills
@@ -51,8 +54,9 @@ Adapter generation
 3. Load specialized capabilities only when the task needs them.
 4. Use specs as the source of feature truth.
 5. Use policies and risk levels to decide what needs review.
-6. Generate agent-specific files from one core.
-7. Run sensors before claiming the work is complete.
+6. Create a mission with tasks, handoffs, risk gates and evidence.
+7. Generate agent-specific files from one core.
+8. Run sensors and quality gates before claiming the work is complete.
 
 ## What Makes It Different From Prompt Packs
 
@@ -68,8 +72,8 @@ Update tests, docs and contracts.
 Run the required sensors before completion.
 ```
 
-The agent surface may change. The C.A.S.A workflow does not.
+The agent surface may change. The C.A.S.A mission model does not.
 
 ## Design Rule
 
-Write once. Adapt everywhere. Govern always.
+Write once. Adapt everywhere. Validate always.

@@ -1,0 +1,17 @@
+agents:
+  - name: planner
+    role: Turns specs into mission plans and task slices.
+  - name: frontend-engineer
+    role: Implements user-facing flows and UI states.
+  - name: backend-architect
+    role: Implements backend behavior within architecture boundaries.
+  - name: api-contract-engineer
+    role: Maintains API contracts and client compatibility.
+  - name: security-reviewer
+    role: Reviews sensitive changes and required controls.
+  - name: legacy-archaeologist
+    role: Performs read-only discovery before legacy changes.
+  - name: test-engineer
+    role: Selects test levels and regression coverage.
+  - name: devops-engineer
+    role: Reviews CI, deployment, environments and observability.

@@ -22,6 +22,30 @@ const requiredPaths = [
   ".casa/kernel/policies/supply-chain-security.md",
   ".casa/kernel/risk-model/risk-levels.md",
   ".casa/kernel/risk-model/approval-matrix.md",
+  ".casa/mission-control/mission-template.md",
+  ".casa/mission-control/context-capsule-template.md",
+  ".casa/mission-control/evidence-template.md",
+  ".casa/mission-control/handoff-template.md",
+  ".casa/mission-control/risk-gate-template.md",
+  ".casa/runtime/missions/README.md",
+  ".casa/context-capsules/frontend-dashboard/capsule.md",
+  ".casa/context-capsules/api-contract/capsule.md",
+  ".casa/context-capsules/legacy-modernization/capsule.md",
+  ".casa/context-capsules/security-sensitive-change/capsule.md",
+  ".casa/context-capsules/database-migration/capsule.md",
+  ".casa/quality-gates/architecture-check.md",
+  ".casa/quality-gates/security-check.md",
+  ".casa/quality-gates/api-contract-check.md",
+  ".casa/quality-gates/ui-quality-check.md",
+  ".casa/quality-gates/legacy-safety-check.md",
+  ".casa/registry/skills.yaml",
+  ".casa/registry/agents.yaml",
+  ".casa/registry/adapters.yaml",
+  ".casa/registry/workflows.yaml",
+  ".casa/registry/policies.yaml",
+  ".casa/cockpit/README.md",
+  ".casa/cockpit/screens.md",
+  ".casa/cockpit/information-architecture.md",
   ".casa/governance/permissions/agent-permissions.md",
   ".casa/governance/permissions/protected-files.md",
   ".casa/governance/permissions/dangerous-actions.md",
@@ -106,6 +130,11 @@ function assertManifest() {
 
   if (!manifest.includes("critical")) {
     warn("Manifest does not declare critical risk governance")
+  }
+
+  if (!manifest.includes("Validate always")) {
+    localFailures += 1
+    fail("Manifest principles must include Validate always")
   }
 
   if (localFailures === 0) {
@@ -267,6 +296,60 @@ function assertSensors() {
   }
 }
 
+function assertControlPlaneBlocks() {
+  let localFailures = 0
+  const missionFiles = [
+    ".casa/mission-control/mission-template.md",
+    ".casa/mission-control/evidence-template.md",
+    ".casa/mission-control/handoff-template.md",
+    ".casa/mission-control/risk-gate-template.md"
+  ]
+  const capsuleFiles = [
+    ".casa/context-capsules/frontend-dashboard/capsule.md",
+    ".casa/context-capsules/api-contract/capsule.md",
+    ".casa/context-capsules/legacy-modernization/capsule.md",
+    ".casa/context-capsules/security-sensitive-change/capsule.md",
+    ".casa/context-capsules/database-migration/capsule.md"
+  ]
+  const qualityGateFiles = [
+    ".casa/quality-gates/architecture-check.md",
+    ".casa/quality-gates/security-check.md",
+    ".casa/quality-gates/api-contract-check.md",
+    ".casa/quality-gates/ui-quality-check.md",
+    ".casa/quality-gates/legacy-safety-check.md"
+  ]
+  const registryFiles = [
+    ".casa/registry/skills.yaml",
+    ".casa/registry/agents.yaml",
+    ".casa/registry/adapters.yaml",
+    ".casa/registry/workflows.yaml",
+    ".casa/registry/policies.yaml"
+  ]
+  const cockpitFiles = [
+    ".casa/cockpit/README.md",
+    ".casa/cockpit/screens.md",
+    ".casa/cockpit/information-architecture.md"
+  ]
+
+  for (const filePath of [...missionFiles, ...capsuleFiles, ...qualityGateFiles, ...registryFiles, ...cockpitFiles]) {
+    if (!exists(filePath)) {
+      localFailures += 1
+      fail(`Missing control-plane file: ${filePath}`)
+    }
+  }
+
+  for (const filePath of qualityGateFiles) {
+    if (exists(filePath) && !readText(filePath).includes("## Evidence")) {
+      localFailures += 1
+      fail(`Quality gate missing evidence section: ${filePath}`)
+    }
+  }
+
+  if (localFailures === 0) {
+    pass("Mission Control, Context Capsules, Quality Gates, Registry and Cockpit exist")
+  }
+}
+
 function assertIdeExamples() {
   let localFailures = 0
   const exampleFiles = [
@@ -315,6 +398,7 @@ assertPolicies()
 assertGeneratedAdapters()
 assertContextMaps()
 assertSensors()
+assertControlPlaneBlocks()
 assertIdeExamples()
 
 if (failures > 0) {
