@@ -1,0 +1,195 @@
+{
+  "generatedBy": "scripts/generate-adapters.mjs",
+  "files": [
+    {
+      "targetPath": ".codex/skills/api-contract-engineer/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/api-contract-engineer/SKILL.md"
+      ],
+      "sourceSha256": "688fd6c09a330fc3fd2707fbcbff913686a8af6f3068aeb7e2e3de7014d4b77d",
+      "targetSha256": "cb8aa467330df3d17a1084fb25a09395e98cff3cfb5f0724f171ce1ed02f7cc0"
+    },
+    {
+      "targetPath": ".codex/skills/backend-clean-architect/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/backend-clean-architect/SKILL.md"
+      ],
+      "sourceSha256": "8d5f2f14c6bc6e87f36aea8a813853641d36740b6a2d09483e426fe6782a0b49",
+      "targetSha256": "87d4855e145401e849ed3b88b1d48e44ee88ae07a4f12ccc15410602028491c4"
+    },
+    {
+      "targetPath": ".codex/skills/casa-skill-router/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/casa-skill-router/SKILL.md"
+      ],
+      "sourceSha256": "17bfba1f4a1cdba59418e6b7dad1ec38b5e19f433cd2528d8dc5c61baf1bcfed",
+      "targetSha256": "ae02bdbb06586ad30291aa0534b7674a89a2ff060f6545d8007211533d660df6"
+    },
+    {
+      "targetPath": ".codex/skills/database-architect/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/database-architect/SKILL.md"
+      ],
+      "sourceSha256": "09861fc5929364e65989e70233ca839591c87666a0cb34dbcd2055a3aa39f21c",
+      "targetSha256": "5e0672c9f1bf389b94a75a7f681cd92d06e8a252378f5cd30f597723d46f0fc2"
+    },
+    {
+      "targetPath": ".codex/skills/devops-engineer/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/devops-engineer/SKILL.md"
+      ],
+      "sourceSha256": "d6b2de31b8ec11c8e2db0ead8160046e0f8e14599887c79eb8223b9e4c90a8d0",
+      "targetSha256": "08a6bf2f46848b0b7082f8e813392d780905414967b93745c16d99aba43d7154"
+    },
+    {
+      "targetPath": ".codex/skills/frontend-design-engineer/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/frontend-design-engineer/SKILL.md"
+      ],
+      "sourceSha256": "5c8b36f9655b201f15ba114eda070a8183292ab90b0689cc953b062a2cc72bbf",
+      "targetSha256": "ea13edf80cf7ef40be70966b10b06e43079fef4de4e5a31d35724a8c5f60cd0a"
+    },
+    {
+      "targetPath": ".codex/skills/legacy-archaeologist/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/legacy-archaeologist/SKILL.md"
+      ],
+      "sourceSha256": "7714a4cf91633c2c4427372d4c525ec6c5e73026ad673c94ae173e4719e95b66",
+      "targetSha256": "dda7a425fb42b87b86eb78bacf16fd00aad82c6e5820868fa84c3f02e510c0de"
+    },
+    {
+      "targetPath": ".codex/skills/security-reviewer/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/security-reviewer/SKILL.md"
+      ],
+      "sourceSha256": "12c6d2ceb4b57259a9c01771d31578e3177cf3390c584c9a375ddb06a9d7b30c",
+      "targetSha256": "3fa16e2e4371667851dc549414f591e8fe66ed1e0d9b55666738f206cd9db6a6"
+    },
+    {
+      "targetPath": ".codex/skills/test-engineer/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/test-engineer/SKILL.md"
+      ],
+      "sourceSha256": "07a6949dce2d60b4c2388d3666604a0b4020cbdd8b07758f8a512daaa0e3d0bb",
+      "targetSha256": "1cf03cb756bbcb44992c68f0f55cc958ca0cad4e751203c4db3ba9457a968500"
+    },
+    {
+      "targetPath": ".cursor/rules/00-casa-context.mdc",
+      "sourcePaths": [
+        "casa.manifest.yaml",
+        "AGENTS.md"
+      ],
+      "sourceSha256": "a73e3497b179567698806fe61f681abb7bb4c9b089b31a6a20ffc17741544752",
+      "targetSha256": "9cf6ea7e909ba60b979bf4eb101c156d07e87f5f7a151352a6a491db4dc32bba"
+    },
+    {
+      "targetPath": ".cursor/rules/01-casa-security.mdc",
+      "sourcePaths": [
+        "casa.manifest.yaml",
+        ".casa/kernel/policies/secure-coding.md"
+      ],
+      "sourceSha256": "8c8617ab9d330bfa44688d8a59a2da00760de1f903eefa5d74c58d40a0f43ae5",
+      "targetSha256": "be7f44dffb43cbfc139068456716f618d7efd04122805225be6d8ea466d481b1"
+    },
+    {
+      "targetPath": ".cursor/rules/02-casa-legacy.mdc",
+      "sourcePaths": [
+        "casa.manifest.yaml",
+        ".casa/capabilities/workflows/modernize-legacy-module.workflow.md"
+      ],
+      "sourceSha256": "d9fd54da21704ff6f103888a73aa85678c6c0144f692e1917d3139d7749b1c5b",
+      "targetSha256": "f681433b09b9626b92850b32699810784fdfe03c7aff1d767b950b3eab200357"
+    },
+    {
+      "targetPath": ".agents/casa-agent-guide.md",
+      "sourcePaths": [
+        "AGENTS.md",
+        "casa.manifest.yaml"
+      ],
+      "sourceSha256": "14920c8d0334ff8d1d9c70bf8fca0c3b3f7ce4cdaf5e268d6e36ac9e39d1ca78",
+      "targetSha256": "9e311105aa2f2fab931e5f4694f7f4db38d76b13c3ee24b1faef69536069b4db"
+    },
+    {
+      "targetPath": ".casa/generated/adapters/generic/AGENT-GUIDE.md",
+      "sourcePaths": [
+        "AGENTS.md",
+        "casa.manifest.yaml"
+      ],
+      "sourceSha256": "14920c8d0334ff8d1d9c70bf8fca0c3b3f7ce4cdaf5e268d6e36ac9e39d1ca78",
+      "targetSha256": "9e311105aa2f2fab931e5f4694f7f4db38d76b13c3ee24b1faef69536069b4db"
+    },
+    {
+      "targetPath": ".casa/generated/adapters/codex/SKILLS.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/api-contract-engineer/SKILL.md",
+        ".casa/capabilities/skills/backend-clean-architect/SKILL.md",
+        ".casa/capabilities/skills/casa-skill-router/SKILL.md",
+        ".casa/capabilities/skills/database-architect/SKILL.md",
+        ".casa/capabilities/skills/devops-engineer/SKILL.md",
+        ".casa/capabilities/skills/frontend-design-engineer/SKILL.md",
+        ".casa/capabilities/skills/legacy-archaeologist/SKILL.md",
+        ".casa/capabilities/skills/security-reviewer/SKILL.md",
+        ".casa/capabilities/skills/test-engineer/SKILL.md"
+      ],
+      "sourceSha256": "4fc4ef78e9d7caa23f3d76803c88a599280e931cd9fd334e1041014786833d02",
+      "targetSha256": "b93fb38142447f54544f99c21926e1cce720e0673f6803b1c43929e315dbcffa"
+    },
+    {
+      "targetPath": ".casa/generated/adapters/claude/SKILLS.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/api-contract-engineer/SKILL.md",
+        ".casa/capabilities/skills/backend-clean-architect/SKILL.md",
+        ".casa/capabilities/skills/casa-skill-router/SKILL.md",
+        ".casa/capabilities/skills/database-architect/SKILL.md",
+        ".casa/capabilities/skills/devops-engineer/SKILL.md",
+        ".casa/capabilities/skills/frontend-design-engineer/SKILL.md",
+        ".casa/capabilities/skills/legacy-archaeologist/SKILL.md",
+        ".casa/capabilities/skills/security-reviewer/SKILL.md",
+        ".casa/capabilities/skills/test-engineer/SKILL.md"
+      ],
+      "sourceSha256": "4fc4ef78e9d7caa23f3d76803c88a599280e931cd9fd334e1041014786833d02",
+      "targetSha256": "ee0112bf4d3600a3c57a7a1ce524c48b93eafe3fd95edffcae5487561fdb70ed"
+    },
+    {
+      "targetPath": ".casa/generated/adapters/devin/KNOWLEDGE.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/api-contract-engineer/SKILL.md",
+        ".casa/capabilities/skills/backend-clean-architect/SKILL.md",
+        ".casa/capabilities/skills/casa-skill-router/SKILL.md",
+        ".casa/capabilities/skills/database-architect/SKILL.md",
+        ".casa/capabilities/skills/devops-engineer/SKILL.md",
+        ".casa/capabilities/skills/frontend-design-engineer/SKILL.md",
+        ".casa/capabilities/skills/legacy-archaeologist/SKILL.md",
+        ".casa/capabilities/skills/security-reviewer/SKILL.md",
+        ".casa/capabilities/skills/test-engineer/SKILL.md"
+      ],
+      "sourceSha256": "4fc4ef78e9d7caa23f3d76803c88a599280e931cd9fd334e1041014786833d02",
+      "targetSha256": "a1c4c3d3d3c7549f0854bc07db52c9b73c6fb1905c4d149508a6f553c1bee7c0"
+    },
+    {
+      "targetPath": ".casa/generated/adapters/antigravity/WORKFLOWS.md",
+      "sourcePaths": [
+        ".casa/capabilities/workflows/implement-feature.workflow.md",
+        ".casa/capabilities/workflows/modernize-legacy-module.workflow.md"
+      ],
+      "sourceSha256": "6e3f9621a9ec1fd8ab61f37e10f3856f2f05601dac47c34f9e86ec6eb9c47c2b",
+      "targetSha256": "5d8f8422e13bd00f27af67d68c1293998c765edb31c32ce6806c21332b202b54"
+    },
+    {
+      "targetPath": ".casa/generated/skills.index.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/api-contract-engineer/SKILL.md",
+        ".casa/capabilities/skills/backend-clean-architect/SKILL.md",
+        ".casa/capabilities/skills/casa-skill-router/SKILL.md",
+        ".casa/capabilities/skills/database-architect/SKILL.md",
+        ".casa/capabilities/skills/devops-engineer/SKILL.md",
+        ".casa/capabilities/skills/frontend-design-engineer/SKILL.md",
+        ".casa/capabilities/skills/legacy-archaeologist/SKILL.md",
+        ".casa/capabilities/skills/security-reviewer/SKILL.md",
+        ".casa/capabilities/skills/test-engineer/SKILL.md"
+      ],
+      "sourceSha256": "4fc4ef78e9d7caa23f3d76803c88a599280e931cd9fd334e1041014786833d02",
+      "targetSha256": "ed1c47877696954314349df87c456af903437dc4ee7446bbc0419ea6801a2839"
+    }
+  ]
+}

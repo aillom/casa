@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: "C.A.S.A: Context, Architecture, Stack & Automation"
+message: "If you use C.A.S.A, please cite this repository."
+type: software
+authors:
+  - name: "Aillom"
+version: "0.1.0"
+date-released: "2026-05-26"
+license: "Apache-2.0"

@@ -41,6 +41,30 @@ C.A.S.A turns vibe coding into governed software delivery.
 - `examples` — practical usage examples.
 - `docs` — human-readable documentation.
 
+## Commands
+
+- `npm run generate` — regenerate agent-specific adapter files from C.A.S.A Core.
+- `npm run generate:check` — verify generated adapter files are in sync.
+- `npm run doctor` — validate manifest, specs, policies, context maps, sensors and generated adapters.
+- `npm run check` — run structure, generated sync and doctor checks.
+
+## Source and generated files
+
+Edit `.casa` Core files first. Then run `npm run generate`.
+
+Generated outputs include:
+
+- `.codex/skills`
+- `.cursor/rules`
+- `.agents/casa-agent-guide.md`
+- `.casa/generated`
+
+Do not edit generated adapter files directly.
+
+## Manual
+
+The long-form public draft is included as `CASA_Agent_Native_Architecture_Manual.pdf`.
+
 ## Status
 
 C.A.S.A is in early development.

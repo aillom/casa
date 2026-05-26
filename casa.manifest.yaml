@@ -47,12 +47,20 @@ governance:
   require_security_review_for_sensitive_changes: true
   require_openapi_for_api_changes: true
   require_tests_for_behavior_changes: true
+  risk_levels:
+    - low
+    - medium
+    - high
+    - critical
   protected_paths:
     - .github/workflows/**
+    - .casa/kernel/policies/**
+    - .casa/kernel/risk-model/**
     - devops/**
     - "**/migrations/**"
     - "**/auth/**"
     - "**/security/**"
+    - "**/contracts/openapi/**"
 
 legacy:
   enabled: true

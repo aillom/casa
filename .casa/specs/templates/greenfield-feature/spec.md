@@ -37,6 +37,11 @@ Describe entities and relationships.
 - When...
 - Then...
 
+## Risks and Questions
+
+- Risk or unknown 1
+- Risk or unknown 2
+
 ## Out of Scope
 
 - Item 1

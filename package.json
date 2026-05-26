@@ -3,8 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "description": "C.A.S.A — Context, Architecture, Stack & Automation",
+  "license": "Apache-2.0",
   "scripts": {
-    "check": "npm run check:structure",
+    "generate": "node scripts/generate-adapters.mjs",
+    "generate:check": "node scripts/generate-adapters.mjs --check",
+    "doctor": "node scripts/casa-doctor.mjs",
+    "check": "npm run check:structure && npm run generate:check && npm run doctor",
     "check:structure": "node scripts/check-structure.mjs"
   },
   "devDependencies": {}
