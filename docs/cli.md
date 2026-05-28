@@ -14,6 +14,17 @@ From this repository:
 ./casa check
 ./casa commands
 ./casa generate adapters
+./casa compose --preset web-saas --name "Customer Portal"
+./casa stack list
+./casa stack plan frontend:react-app security:web-baseline
+./casa ai configure openrouter --model openai/gpt-5.2
+./casa guide --goal "build and deploy a SaaS"
+./casa recipe list
+./casa recipe plan create-web-saas --name "Customer Portal"
+./casa template list
+./casa history list
+./casa skill search stripe
+./casa skill inspect owner/repo/path/to/skill
 ./casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
 ./casa capsule list
 ./casa gate list
@@ -36,6 +47,8 @@ Without the local shortcut:
 npx @aillomai/casa doctor
 npx @aillomai/casa check
 npx @aillomai/casa generate adapters
+npx @aillomai/casa compose --preset ai-fullstack --openrouter
+npx @aillomai/casa stack add frontend:react-app security:web-baseline
 npx @aillomai/casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
 ```
 
@@ -92,6 +105,133 @@ Runs the full local validation chain:
 Regenerates agent-specific adapter outputs from C.A.S.A Core.
 
 Use `--check` to validate sync without writing files.
+
+### `casa compose`
+
+Generates a governed application stack plan, a stack composition spec and optional AI provider config.
+
+Examples:
+
+```bash
+./casa compose --preset web-saas --name "Customer Portal"
+./casa compose --preset mobile-app --name "Field App"
+./casa compose --preset desktop-app --name "Backoffice Desktop"
+./casa compose --preset filament-admin --name "Ops Admin"
+./casa compose --preset ai-fullstack --openrouter --model openai/gpt-5.2
+```
+
+Without `--preset` or `--packs`, `casa compose` asks questions in an interactive terminal.
+
+Generated files include:
+
+- `.casa/runtime/stack-plans/<date>-<name>.md`
+- `.casa/specs/generated/<name>/spec.md`
+- `.casa/ai/model-router.yaml` when OpenRouter is selected
+- `.casa/ai/openrouter.env.example` when OpenRouter is selected
+
+The OpenRouter files store environment variable names and placeholders only. Real API keys must stay in local environment files or secret managers.
+
+### `casa stack`
+
+Lists, inspects, plans or installs governed stack packs from `.casa/registry/stacks.json`.
+
+```bash
+./casa stack list
+./casa stack list --surface mobile
+./casa stack show ai:openrouter
+./casa stack plan frontend:react-app security:web-baseline
+./casa stack plan desktop:tauri-react --ecosystem all
+./casa stack plan --preset web-saas --output .casa/runtime/stack-plans/web-saas.md
+./casa stack add frontend:react-app security:web-baseline
+```
+
+`stack add` writes a plan and prints install commands. It only runs package managers when `--execute` is passed:
+
+```bash
+./casa stack add frontend:react-app security:web-baseline --execute
+```
+
+Supported pack categories include frontend, backend, database, security, mobile, desktop, admin and AI.
+Use `--ecosystem node|composer|python|cargo|all` when the auto-detected package ecosystem is not the one you want.
+
+### `casa recipe`
+
+Plans or runs prebuilt terminal workflows from `.casa/registry/recipes.json`.
+
+```bash
+./casa recipe list
+./casa recipe show create-web-saas
+./casa recipe plan create-web-saas --name "Customer Portal"
+./casa recipe plan add-openrouter-ai --name "Assistant Runtime" --write
+./casa recipe run harden-web-security
+```
+
+`recipe run` records history and prints install commands. It only runs recipe commands and installs packages when `--execute` is present.
+
+```bash
+./casa recipe run create-web-saas --name "Customer Portal" --execute
+```
+
+### `casa guide`
+
+Suggests a terminal-first path for a goal.
+
+```bash
+./casa guide --goal "deploy"
+./casa guide --goal "mobile app"
+```
+
+### `casa template`
+
+Lists or copies starter templates.
+
+```bash
+./casa template list
+./casa template use greenfield-next-nest-postgres ../my-app
+```
+
+### `casa history`
+
+Shows local harness history from `.casa/runtime/history/harness.jsonl`.
+
+```bash
+./casa history list
+./casa history show <entry-id>
+```
+
+### `casa skill`
+
+Lists, creates, searches, audits, installs or removes C.A.S.A skills.
+
+```bash
+./casa skill list
+./casa skill new billing-engineer --description "Use when implementing billing flows."
+./casa skill new payment-reviewer --no-generate
+./casa skill search stripe
+./casa skill inspect owner/repo/path/to/skill
+./casa skill install owner/repo/path/to/skill
+./casa skill audit
+./casa skill update stripe-payments
+./casa skill remove stripe-payments
+```
+
+By default, `skill new` updates `.casa/registry/skills.yaml` and regenerates agent adapters.
+Remote GitHub installs are inspected, audited, pinned to a commit SHA in `.casa/registry/skills.lock.json`, then installed under `.casa/capabilities/skills`.
+
+### `casa ai configure openrouter`
+
+Generates safe OpenRouter configuration without storing raw secrets.
+
+```bash
+./casa ai configure openrouter --model openai/gpt-5.2
+./casa ai configure openrouter --model anthropic/claude-sonnet-4.5 --api-key-env OPENROUTER_API_KEY
+```
+
+The generated config uses:
+
+- base URL: `https://openrouter.ai/api/v1`
+- API key env var: `OPENROUTER_API_KEY`
+- model env var: `OPENROUTER_MODEL`
 
 ### `casa mission new <slug>`
 

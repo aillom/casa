@@ -1,5 +1,5 @@
 name: casa
-version: 0.1.4
+version: 0.1.6
 method: Context, Architecture, Stack & Automation
 owner: Aillom
 
@@ -42,6 +42,31 @@ context:
   use_subagents_for_exploration: true
   use_code_intelligence: true
 
+stack_composition:
+  registry: .casa/registry/stacks.json
+  guided_cli: true
+  install_requires_explicit_execute: true
+  supported_surfaces:
+    - web
+    - mobile
+    - desktop
+    - api
+    - admin
+    - database
+    - ai
+  ai_providers:
+    - openrouter
+
+harness:
+  recipe_registry: .casa/registry/recipes.json
+  skill_marketplace: .casa/registry/skill-marketplace.json
+  skill_lockfile: .casa/registry/skills.lock.json
+  history: .casa/runtime/history
+  recipe_runs: .casa/runtime/recipes
+  terminal_first: true
+  record_history: true
+  execute_requires_flag: true
+
 governance:
   require_specs: true
   require_acceptance_criteria: true
@@ -57,6 +82,10 @@ governance:
     - .github/workflows/**
     - .casa/kernel/policies/**
     - .casa/kernel/risk-model/**
+    - .casa/registry/stacks.json
+    - .casa/registry/recipes.json
+    - .casa/registry/skill-marketplace.json
+    - .casa/registry/skills.lock.json
     - devops/**
     - "**/migrations/**"
     - "**/auth/**"

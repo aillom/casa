@@ -1,6 +1,6 @@
 {
   "name": "@aillomai/casa",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "C.A.S.A — AI coding agent harness and engineering control plane",
   "license": "Apache-2.0",
   "type": "module",

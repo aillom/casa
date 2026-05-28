@@ -8,6 +8,7 @@ Edit .casa files and regenerate adapters.
 
 Source: `.casa/capabilities/skills`
 
+- ai-integration-engineer: .casa/capabilities/skills/ai-integration-engineer/SKILL.md
 - api-contract-engineer: .casa/capabilities/skills/api-contract-engineer/SKILL.md
 - backend-clean-architect: .casa/capabilities/skills/backend-clean-architect/SKILL.md
 - casa-skill-router: .casa/capabilities/skills/casa-skill-router/SKILL.md
@@ -16,4 +17,6 @@ Source: `.casa/capabilities/skills`
 - frontend-design-engineer: .casa/capabilities/skills/frontend-design-engineer/SKILL.md
 - legacy-archaeologist: .casa/capabilities/skills/legacy-archaeologist/SKILL.md
 - security-reviewer: .casa/capabilities/skills/security-reviewer/SKILL.md
+- software-delivery-facilitator: .casa/capabilities/skills/software-delivery-facilitator/SKILL.md
+- stack-composer: .casa/capabilities/skills/stack-composer/SKILL.md
 - test-engineer: .casa/capabilities/skills/test-engineer/SKILL.md

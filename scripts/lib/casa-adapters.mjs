@@ -3,6 +3,7 @@ import fs from "node:fs"
 import path from "node:path"
 
 const skillRoot = ".casa/capabilities/skills"
+const workflowRoot = ".casa/capabilities/workflows"
 
 const codexHeader = `<!--
 Generated from .casa/capabilities/skills.
@@ -41,6 +42,26 @@ function listSkillFiles() {
       const sourcePath = path.join(skillRoot, entry.name, "SKILL.md")
       return {
         name: entry.name,
+        sourcePath,
+        content: readText(sourcePath).trimEnd()
+      }
+    })
+    .sort((a, b) => a.name.localeCompare(b.name))
+}
+
+function listWorkflowFiles() {
+  if (!fs.existsSync(workflowRoot)) {
+    return []
+  }
+
+  return fs
+    .readdirSync(workflowRoot, { withFileTypes: true })
+    .filter((entry) => entry.isFile())
+    .filter((entry) => entry.name.endsWith(".workflow.md"))
+    .map((entry) => {
+      const sourcePath = path.join(workflowRoot, entry.name)
+      return {
+        name: entry.name.replace(/\.workflow\.md$/, ""),
         sourcePath,
         content: readText(sourcePath).trimEnd()
       }
@@ -207,6 +228,16 @@ This project uses C.A.S.A - Context, Architecture, Stack & Automation.
 5. Follow specs in \`.casa/specs\`.
 6. Do not edit generated files directly.
 
+## Stack composition
+
+Use \`casa compose\` or \`casa stack add\` before installing app dependencies.
+Stack packs live in \`.casa/registry/stacks.json\`.
+
+## Terminal recipes and history
+
+Use \`casa recipe plan\`, \`casa recipe run\`, \`casa guide\` and \`casa history list\` for repeatable terminal workflows.
+Recipes live in \`.casa/registry/recipes.json\`; local harness history lives in \`.casa/runtime/history\`.
+
 ## Legacy work
 
 Use the legacy modernization flow:
@@ -236,8 +267,18 @@ ${skills
 `
 }
 
+function workflowPack(title, workflows) {
+  return `${generatedHeader}# ${title}
+
+${workflows
+  .map((workflow) => `## ${workflow.name}\n\nSource: \`${workflow.sourcePath}\`\n\n${workflow.content}`)
+  .join("\n\n")}
+`
+}
+
 export function buildAdapterFiles() {
   const skills = listSkillFiles()
+  const workflows = listWorkflowFiles()
   const files = []
 
   for (const skill of skills) {
@@ -291,20 +332,8 @@ export function buildAdapterFiles() {
     },
     {
       targetPath: ".casa/generated/adapters/antigravity/WORKFLOWS.md",
-      sourcePaths: [
-        ".casa/capabilities/workflows/implement-feature.workflow.md",
-        ".casa/capabilities/workflows/modernize-legacy-module.workflow.md"
-      ],
-      content: `${generatedHeader}# Antigravity Workflow Pack
-
-## Implement Feature
-
-${readText(".casa/capabilities/workflows/implement-feature.workflow.md").trimEnd()}
-
-## Modernize Legacy Module
-
-${readText(".casa/capabilities/workflows/modernize-legacy-module.workflow.md").trimEnd()}
-`
+      sourcePaths: workflows.map((workflow) => workflow.sourcePath),
+      content: workflowPack("Antigravity Workflow Pack", workflows)
     },
     {
       targetPath: ".casa/generated/skills.index.md",

@@ -17,6 +17,16 @@ This project uses C.A.S.A - Context, Architecture, Stack & Automation.
 5. Follow specs in `.casa/specs`.
 6. Do not edit generated files directly.
 
+## Stack composition
+
+Use `casa compose` or `casa stack add` before installing app dependencies.
+Stack packs live in `.casa/registry/stacks.json`.
+
+## Terminal recipes and history
+
+Use `casa recipe plan`, `casa recipe run`, `casa guide` and `casa history list` for repeatable terminal workflows.
+Recipes live in `.casa/registry/recipes.json`; local harness history lives in `.casa/runtime/history`.
+
 ## Legacy work
 
 Use the legacy modernization flow:

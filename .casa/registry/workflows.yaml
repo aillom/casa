@@ -1,4 +1,7 @@
 workflows:
+  - name: compose-application-stack
+    path: .casa/capabilities/workflows/compose-application-stack.workflow.md
+    mission_type: greenfield
   - name: implement-feature
     path: .casa/capabilities/workflows/implement-feature.workflow.md
     mission_type: greenfield

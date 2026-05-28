@@ -2,6 +2,14 @@
   "generatedBy": "scripts/generate-adapters.mjs",
   "files": [
     {
+      "targetPath": ".codex/skills/ai-integration-engineer/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/ai-integration-engineer/SKILL.md"
+      ],
+      "sourceSha256": "ddb714732ddb1f4e773c6d3673128d60b68a40eabd42d88d0801373e1eea87c8",
+      "targetSha256": "253000d6ece07aa10d4fc449d9c99b63fd34086429372ff35f9c2828639bbf93"
+    },
+    {
       "targetPath": ".codex/skills/api-contract-engineer/SKILL.md",
       "sourcePaths": [
         ".casa/capabilities/skills/api-contract-engineer/SKILL.md"
@@ -22,8 +30,8 @@
       "sourcePaths": [
         ".casa/capabilities/skills/casa-skill-router/SKILL.md"
       ],
-      "sourceSha256": "17bfba1f4a1cdba59418e6b7dad1ec38b5e19f433cd2528d8dc5c61baf1bcfed",
-      "targetSha256": "ae02bdbb06586ad30291aa0534b7674a89a2ff060f6545d8007211533d660df6"
+      "sourceSha256": "f13e509daa0ff7b3f0991ec4b0050a837c308c73a41219aaf29808fd2e070e21",
+      "targetSha256": "9581312e396165b8887fa68f1e8c86f08084a377925b38c14c9a2dd960b39485"
     },
     {
       "targetPath": ".codex/skills/database-architect/SKILL.md",
@@ -66,6 +74,22 @@
       "targetSha256": "3fa16e2e4371667851dc549414f591e8fe66ed1e0d9b55666738f206cd9db6a6"
     },
     {
+      "targetPath": ".codex/skills/software-delivery-facilitator/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/software-delivery-facilitator/SKILL.md"
+      ],
+      "sourceSha256": "acbf5d88aa851b0c56b011d3054028fd4f6e0d10cabf894d71538b38e28e6afa",
+      "targetSha256": "a2a87a00f4d90e622e7d604249d1e45686a9455a6e23b57b6a030bc472826669"
+    },
+    {
+      "targetPath": ".codex/skills/stack-composer/SKILL.md",
+      "sourcePaths": [
+        ".casa/capabilities/skills/stack-composer/SKILL.md"
+      ],
+      "sourceSha256": "5c200b28a11b95aa3918343233338e6de26b3b9aacecd3b5c8bd96f908dd402c",
+      "targetSha256": "8df0b737094c66a5f4d7dac3d105c791705a1a0b5716abebd06c7c2819671e4e"
+    },
+    {
       "targetPath": ".codex/skills/test-engineer/SKILL.md",
       "sourcePaths": [
         ".casa/capabilities/skills/test-engineer/SKILL.md"
@@ -79,8 +103,8 @@
         "casa.manifest.yaml",
         "AGENTS.md"
       ],
-      "sourceSha256": "2d0d7f36e8af2e18f9744afeec1f2d5f6634625c16ce0973eb7ba6a6f782a546",
-      "targetSha256": "dd46b1fd146b3a3f815330ad78c82249c777b5274ddf817cb3ddc3e74af4ea9a"
+      "sourceSha256": "3239d93679f150787156edd1ff85cdaf6de3ea114cd01e410900572e9244663e",
+      "targetSha256": "f9867e6cab898da99e694d65644af7a1ef193a75913c42b46b08652c7901f08a"
     },
     {
       "targetPath": ".cursor/rules/01-casa-security.mdc",
@@ -88,8 +112,8 @@
         "casa.manifest.yaml",
         ".casa/kernel/policies/secure-coding.md"
       ],
-      "sourceSha256": "78648853389d633939f7b2c54ccfb76ce5e5b1bc18a7fb8c8d70c554012e3fd0",
-      "targetSha256": "be7f44dffb43cbfc139068456716f618d7efd04122805225be6d8ea466d481b1"
+      "sourceSha256": "89b8bf462f0998a49422183c3a29d98b59528bd96a15d017bec4a466eb97491d",
+      "targetSha256": "cda837874c43feec1ec55ea4617bd6d9d102e204275315f05560258849dd59b9"
     },
     {
       "targetPath": ".cursor/rules/02-casa-legacy.mdc",
@@ -97,7 +121,7 @@
         "casa.manifest.yaml",
         ".casa/capabilities/workflows/modernize-legacy-module.workflow.md"
       ],
-      "sourceSha256": "8ce6871930d60004efa6ee157f52fb1b347d7f341009440359143ceadae3bb6f",
+      "sourceSha256": "add45441fd7d3b08f22b769d06447f5a2080a73ce4e9a063aea1ea379852422b",
       "targetSha256": "f681433b09b9626b92850b32699810784fdfe03c7aff1d767b950b3eab200357"
     },
     {
@@ -106,8 +130,8 @@
         "AGENTS.md",
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "05dcac20c23d475e93faafc75792c67adbbd9d61f3ac321adf26e56c0ef63132",
-      "targetSha256": "9e311105aa2f2fab931e5f4694f7f4db38d76b13c3ee24b1faef69536069b4db"
+      "sourceSha256": "3e13328633e2916ee5113b0a936d639026a48379c07e279a283b84f01279df54",
+      "targetSha256": "7962bdf23949cc0c16b1a0249c13afef7affd788b177a5c336ddf8e6df7535ba"
     },
     {
       "targetPath": ".casa/generated/adapters/generic/AGENT-GUIDE.md",
@@ -115,12 +139,13 @@
         "AGENTS.md",
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "05dcac20c23d475e93faafc75792c67adbbd9d61f3ac321adf26e56c0ef63132",
-      "targetSha256": "9e311105aa2f2fab931e5f4694f7f4db38d76b13c3ee24b1faef69536069b4db"
+      "sourceSha256": "3e13328633e2916ee5113b0a936d639026a48379c07e279a283b84f01279df54",
+      "targetSha256": "7962bdf23949cc0c16b1a0249c13afef7affd788b177a5c336ddf8e6df7535ba"
     },
     {
       "targetPath": ".casa/generated/adapters/codex/SKILLS.md",
       "sourcePaths": [
+        ".casa/capabilities/skills/ai-integration-engineer/SKILL.md",
         ".casa/capabilities/skills/api-contract-engineer/SKILL.md",
         ".casa/capabilities/skills/backend-clean-architect/SKILL.md",
         ".casa/capabilities/skills/casa-skill-router/SKILL.md",
@@ -129,14 +154,17 @@
         ".casa/capabilities/skills/frontend-design-engineer/SKILL.md",
         ".casa/capabilities/skills/legacy-archaeologist/SKILL.md",
         ".casa/capabilities/skills/security-reviewer/SKILL.md",
+        ".casa/capabilities/skills/software-delivery-facilitator/SKILL.md",
+        ".casa/capabilities/skills/stack-composer/SKILL.md",
         ".casa/capabilities/skills/test-engineer/SKILL.md"
       ],
-      "sourceSha256": "4fc4ef78e9d7caa23f3d76803c88a599280e931cd9fd334e1041014786833d02",
-      "targetSha256": "b93fb38142447f54544f99c21926e1cce720e0673f6803b1c43929e315dbcffa"
+      "sourceSha256": "47653a7050bbb4efb39a0c57046613ced0fa554a25fef1490378a9be080c6529",
+      "targetSha256": "5c907eadb31b13199f2f0cf546a7322ae1ed1aa1671e3f9d252973a2f1054203"
     },
     {
       "targetPath": ".casa/generated/adapters/claude/SKILLS.md",
       "sourcePaths": [
+        ".casa/capabilities/skills/ai-integration-engineer/SKILL.md",
         ".casa/capabilities/skills/api-contract-engineer/SKILL.md",
         ".casa/capabilities/skills/backend-clean-architect/SKILL.md",
         ".casa/capabilities/skills/casa-skill-router/SKILL.md",
@@ -145,14 +173,17 @@
         ".casa/capabilities/skills/frontend-design-engineer/SKILL.md",
         ".casa/capabilities/skills/legacy-archaeologist/SKILL.md",
         ".casa/capabilities/skills/security-reviewer/SKILL.md",
+        ".casa/capabilities/skills/software-delivery-facilitator/SKILL.md",
+        ".casa/capabilities/skills/stack-composer/SKILL.md",
         ".casa/capabilities/skills/test-engineer/SKILL.md"
       ],
-      "sourceSha256": "4fc4ef78e9d7caa23f3d76803c88a599280e931cd9fd334e1041014786833d02",
-      "targetSha256": "ee0112bf4d3600a3c57a7a1ce524c48b93eafe3fd95edffcae5487561fdb70ed"
+      "sourceSha256": "47653a7050bbb4efb39a0c57046613ced0fa554a25fef1490378a9be080c6529",
+      "targetSha256": "c53f397a18f6866902750c631726cb858971de122dae29c3b6a79af1a6cba9b8"
     },
     {
       "targetPath": ".casa/generated/adapters/devin/KNOWLEDGE.md",
       "sourcePaths": [
+        ".casa/capabilities/skills/ai-integration-engineer/SKILL.md",
         ".casa/capabilities/skills/api-contract-engineer/SKILL.md",
         ".casa/capabilities/skills/backend-clean-architect/SKILL.md",
         ".casa/capabilities/skills/casa-skill-router/SKILL.md",
@@ -161,23 +192,27 @@
         ".casa/capabilities/skills/frontend-design-engineer/SKILL.md",
         ".casa/capabilities/skills/legacy-archaeologist/SKILL.md",
         ".casa/capabilities/skills/security-reviewer/SKILL.md",
+        ".casa/capabilities/skills/software-delivery-facilitator/SKILL.md",
+        ".casa/capabilities/skills/stack-composer/SKILL.md",
         ".casa/capabilities/skills/test-engineer/SKILL.md"
       ],
-      "sourceSha256": "4fc4ef78e9d7caa23f3d76803c88a599280e931cd9fd334e1041014786833d02",
-      "targetSha256": "a1c4c3d3d3c7549f0854bc07db52c9b73c6fb1905c4d149508a6f553c1bee7c0"
+      "sourceSha256": "47653a7050bbb4efb39a0c57046613ced0fa554a25fef1490378a9be080c6529",
+      "targetSha256": "1757541e40080c18d82c1b7d3e73e51a17fa1ecb3dbad1d390b4d3bbef35a179"
     },
     {
       "targetPath": ".casa/generated/adapters/antigravity/WORKFLOWS.md",
       "sourcePaths": [
+        ".casa/capabilities/workflows/compose-application-stack.workflow.md",
         ".casa/capabilities/workflows/implement-feature.workflow.md",
         ".casa/capabilities/workflows/modernize-legacy-module.workflow.md"
       ],
-      "sourceSha256": "6e3f9621a9ec1fd8ab61f37e10f3856f2f05601dac47c34f9e86ec6eb9c47c2b",
-      "targetSha256": "5d8f8422e13bd00f27af67d68c1293998c765edb31c32ce6806c21332b202b54"
+      "sourceSha256": "858e0e708222ed9d68b5fdab3403be0a29a2bc1fdd06862fa762cfe67e323db2",
+      "targetSha256": "3da2b4c9abbc3dd6a6f29d4e5c38f6536b79f8ebbeb1841b19f6414907dee2b3"
     },
     {
       "targetPath": ".casa/generated/skills.index.md",
       "sourcePaths": [
+        ".casa/capabilities/skills/ai-integration-engineer/SKILL.md",
         ".casa/capabilities/skills/api-contract-engineer/SKILL.md",
         ".casa/capabilities/skills/backend-clean-architect/SKILL.md",
         ".casa/capabilities/skills/casa-skill-router/SKILL.md",
@@ -186,10 +221,12 @@
         ".casa/capabilities/skills/frontend-design-engineer/SKILL.md",
         ".casa/capabilities/skills/legacy-archaeologist/SKILL.md",
         ".casa/capabilities/skills/security-reviewer/SKILL.md",
+        ".casa/capabilities/skills/software-delivery-facilitator/SKILL.md",
+        ".casa/capabilities/skills/stack-composer/SKILL.md",
         ".casa/capabilities/skills/test-engineer/SKILL.md"
       ],
-      "sourceSha256": "4fc4ef78e9d7caa23f3d76803c88a599280e931cd9fd334e1041014786833d02",
-      "targetSha256": "ed1c47877696954314349df87c456af903437dc4ee7446bbc0419ea6801a2839"
+      "sourceSha256": "47653a7050bbb4efb39a0c57046613ced0fa554a25fef1490378a9be080c6529",
+      "targetSha256": "e932300214193d78f85ead968ea8f89cc804bf61d321493ff87c8d2d087bddc7"
     }
   ]
 }

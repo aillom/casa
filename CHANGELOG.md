@@ -2,6 +2,18 @@
 
 All notable changes to C.A.S.A will be documented in this file.
 
+## 0.1.6
+
+- Add GitHub skill marketplace search, inspect, install, audit, update and remove commands.
+- Add skill marketplace trust config, commit-pinned skill lockfile and external skill audit rules.
+- Add skill marketplace documentation and supply-chain governance checks.
+
+## 0.1.5
+
+- Add terminal-first harness recipes, stack packs, templates, history and guided CLI commands.
+- Add OpenRouter model-router configuration support with env-only secrets.
+- Add stack, AI and harness standards plus generated skills for stack composition, AI integration and software delivery facilitation.
+
 ## 0.1.4
 
 - Add AI coding agent harness positioning to README, introduction and npm metadata for discovery.

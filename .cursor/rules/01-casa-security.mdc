@@ -31,6 +31,10 @@ Protected paths:
 - .github/workflows/**
 - .casa/kernel/policies/**
 - .casa/kernel/risk-model/**
+- .casa/registry/stacks.json
+- .casa/registry/recipes.json
+- .casa/registry/skill-marketplace.json
+- .casa/registry/skills.lock.json
 - devops/**
 - **/migrations/**
 - **/auth/**

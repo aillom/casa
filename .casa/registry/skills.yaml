@@ -1,6 +1,12 @@
 skills:
   - name: casa-skill-router
     path: .casa/capabilities/skills/casa-skill-router/SKILL.md
+  - name: stack-composer
+    path: .casa/capabilities/skills/stack-composer/SKILL.md
+  - name: ai-integration-engineer
+    path: .casa/capabilities/skills/ai-integration-engineer/SKILL.md
+  - name: software-delivery-facilitator
+    path: .casa/capabilities/skills/software-delivery-facilitator/SKILL.md
   - name: frontend-design-engineer
     path: .casa/capabilities/skills/frontend-design-engineer/SKILL.md
   - name: backend-clean-architect

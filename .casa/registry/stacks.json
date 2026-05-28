@@ -1,0 +1,422 @@
+{
+  "version": "0.1.0",
+  "description": "Governed stack packs for C.A.S.A stack composition.",
+  "presets": [
+    {
+      "id": "web-saas",
+      "name": "Web SaaS",
+      "summary": "React web app, Fastify API, Postgres persistence and web security baseline.",
+      "packs": [
+        "frontend:react-app",
+        "backend:fastify-api",
+        "database:postgres-prisma",
+        "security:web-baseline"
+      ]
+    },
+    {
+      "id": "mobile-app",
+      "name": "Mobile App",
+      "summary": "Expo mobile app, API backend, Supabase client and web/API security baseline.",
+      "packs": [
+        "mobile:expo-app",
+        "backend:fastify-api",
+        "database:supabase",
+        "security:web-baseline"
+      ]
+    },
+    {
+      "id": "desktop-app",
+      "name": "Desktop App",
+      "summary": "Tauri desktop app with a React UI and SQLite/Prisma persistence.",
+      "packs": [
+        "desktop:tauri-react",
+        "frontend:react-app",
+        "database:sqlite-prisma",
+        "security:desktop-baseline"
+      ]
+    },
+    {
+      "id": "filament-admin",
+      "name": "Filament Admin",
+      "summary": "Laravel admin panel with Filament, database persistence and Laravel security review points.",
+      "packs": [
+        "admin:filament-php",
+        "database:laravel-postgres",
+        "security:laravel-baseline"
+      ]
+    },
+    {
+      "id": "ai-fullstack",
+      "name": "AI Fullstack",
+      "summary": "Web SaaS preset with OpenRouter model routing.",
+      "packs": [
+        "frontend:react-app",
+        "backend:fastify-api",
+        "database:postgres-prisma",
+        "security:web-baseline",
+        "ai:openrouter"
+      ]
+    }
+  ],
+  "packs": [
+    {
+      "id": "frontend:react-app",
+      "name": "React App Foundation",
+      "category": "frontend",
+      "surfaces": ["web"],
+      "risk": "medium",
+      "summary": "React, TypeScript, Vite, Tailwind, Radix primitives, Lucide, TanStack Query/Table and Vitest.",
+      "skills": ["frontend-design-engineer", "test-engineer"],
+      "policies": ["supply-chain-security", "secure-coding"],
+      "quality_gates": ["ui-quality-check", "security-check"],
+      "packages": {
+        "npm": {
+          "dependencies": [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@tanstack/react-query",
+            "@tanstack/react-table",
+            "class-variance-authority",
+            "clsx",
+            "lucide-react",
+            "react",
+            "react-dom",
+            "tailwind-merge",
+            "zod"
+          ],
+          "devDependencies": [
+            "@testing-library/jest-dom",
+            "@testing-library/react",
+            "@testing-library/user-event",
+            "@types/react",
+            "@types/react-dom",
+            "@vitejs/plugin-react",
+            "autoprefixer",
+            "postcss",
+            "tailwindcss",
+            "typescript",
+            "vite",
+            "vitest"
+          ]
+        }
+      },
+      "questions": [
+        "Which routes are public, authenticated and admin-only?",
+        "Which design system tokens are authoritative?",
+        "Which screens need loading, empty and error states first?"
+      ]
+    },
+    {
+      "id": "mobile:expo-app",
+      "name": "Expo Mobile App Foundation",
+      "category": "mobile",
+      "surfaces": ["mobile"],
+      "risk": "medium",
+      "summary": "Expo, React Native, Expo Router, NativeWind, secure storage and mobile test baseline.",
+      "skills": ["frontend-design-engineer", "security-reviewer", "test-engineer"],
+      "policies": ["secure-coding", "data-protection", "supply-chain-security"],
+      "quality_gates": ["ui-quality-check", "security-check"],
+      "packages": {
+        "npm": {
+          "dependencies": [
+            "expo",
+            "expo-router",
+            "expo-secure-store",
+            "nativewind",
+            "react",
+            "react-native",
+            "react-native-safe-area-context",
+            "react-native-screens",
+            "zod"
+          ],
+          "devDependencies": [
+            "@testing-library/react-native",
+            "@types/react",
+            "jest-expo",
+            "typescript"
+          ]
+        }
+      },
+      "questions": [
+        "Which data must never be stored in local device storage?",
+        "Which flows must work offline or recover after reconnect?",
+        "Which permissions require platform-specific explanation?"
+      ]
+    },
+    {
+      "id": "desktop:tauri-react",
+      "name": "Tauri Desktop App Foundation",
+      "category": "desktop",
+      "surfaces": ["desktop"],
+      "risk": "high",
+      "summary": "Tauri desktop shell with React integration and desktop permission review points.",
+      "skills": ["frontend-design-engineer", "security-reviewer", "devops-engineer", "test-engineer"],
+      "policies": ["secure-coding", "supply-chain-security", "infrastructure-security"],
+      "quality_gates": ["security-check", "ui-quality-check"],
+      "packages": {
+        "npm": {
+          "dependencies": ["@tauri-apps/api"],
+          "devDependencies": ["@tauri-apps/cli"]
+        },
+        "cargo": {
+          "dependencies": ["tauri"]
+        }
+      },
+      "questions": [
+        "Which native APIs are required and why?",
+        "Which filesystem or shell permissions are allowed?",
+        "How will builds be signed and distributed?"
+      ]
+    },
+    {
+      "id": "backend:fastify-api",
+      "name": "Fastify API Foundation",
+      "category": "backend",
+      "surfaces": ["api"],
+      "risk": "medium",
+      "summary": "Fastify API with CORS, rate limiting, Swagger/OpenAPI, Zod validation and Vitest.",
+      "skills": ["backend-clean-architect", "api-contract-engineer", "security-reviewer", "test-engineer"],
+      "policies": ["api-security", "secure-coding", "supply-chain-security"],
+      "quality_gates": ["api-contract-check", "security-check"],
+      "packages": {
+        "npm": {
+          "dependencies": [
+            "@fastify/cors",
+            "@fastify/helmet",
+            "@fastify/rate-limit",
+            "@fastify/swagger",
+            "@fastify/swagger-ui",
+            "fastify",
+            "zod"
+          ],
+          "devDependencies": ["tsx", "typescript", "vitest"]
+        }
+      },
+      "questions": [
+        "Which endpoints are public by design?",
+        "Which auth context is required at the boundary?",
+        "Which API contracts must be generated before implementation?"
+      ]
+    },
+    {
+      "id": "backend:nest-api",
+      "name": "NestJS API Foundation",
+      "category": "backend",
+      "surfaces": ["api"],
+      "risk": "medium",
+      "summary": "NestJS API with config, validation, Swagger/OpenAPI and Jest test baseline.",
+      "skills": ["backend-clean-architect", "api-contract-engineer", "security-reviewer", "test-engineer"],
+      "policies": ["api-security", "secure-coding", "supply-chain-security"],
+      "quality_gates": ["api-contract-check", "security-check"],
+      "packages": {
+        "npm": {
+          "dependencies": [
+            "@nestjs/common",
+            "@nestjs/config",
+            "@nestjs/core",
+            "@nestjs/platform-express",
+            "@nestjs/swagger",
+            "class-transformer",
+            "class-validator",
+            "reflect-metadata",
+            "rxjs"
+          ],
+          "devDependencies": ["@nestjs/testing", "@types/node", "jest", "ts-jest", "typescript"]
+        }
+      },
+      "questions": [
+        "Which modules own domain logic?",
+        "Which guards are required before public routes ship?",
+        "Which contracts must be exported for clients?"
+      ]
+    },
+    {
+      "id": "database:postgres-prisma",
+      "name": "Postgres with Prisma",
+      "category": "database",
+      "surfaces": ["database"],
+      "risk": "high",
+      "summary": "PostgreSQL access through Prisma, migrations and generated client.",
+      "skills": ["database-architect", "security-reviewer", "test-engineer"],
+      "policies": ["database-security", "data-protection", "supply-chain-security"],
+      "quality_gates": ["architecture-check", "security-check"],
+      "packages": {
+        "npm": {
+          "dependencies": ["@prisma/client"],
+          "devDependencies": ["prisma"]
+        }
+      },
+      "questions": [
+        "Which tenant boundary must every query preserve?",
+        "Which migrations are destructive or need rollback planning?",
+        "Which sensitive columns need ownership documentation?"
+      ]
+    },
+    {
+      "id": "database:sqlite-prisma",
+      "name": "SQLite with Prisma",
+      "category": "database",
+      "surfaces": ["database", "desktop"],
+      "risk": "medium",
+      "summary": "SQLite access through Prisma for local-first or desktop apps.",
+      "skills": ["database-architect", "security-reviewer", "test-engineer"],
+      "policies": ["database-security", "data-protection", "supply-chain-security"],
+      "quality_gates": ["architecture-check", "security-check"],
+      "packages": {
+        "npm": {
+          "dependencies": ["@prisma/client"],
+          "devDependencies": ["prisma"]
+        }
+      },
+      "questions": [
+        "Which local data must be encrypted or avoided?",
+        "How will sync conflicts be resolved?",
+        "Which migration rollback path is acceptable?"
+      ]
+    },
+    {
+      "id": "database:supabase",
+      "name": "Supabase Client",
+      "category": "database",
+      "surfaces": ["web", "mobile", "api", "database"],
+      "risk": "high",
+      "summary": "Supabase client integration with tenant and RLS review points.",
+      "skills": ["database-architect", "security-reviewer", "test-engineer"],
+      "policies": ["database-security", "api-security", "data-protection", "supply-chain-security"],
+      "quality_gates": ["security-check", "architecture-check"],
+      "packages": {
+        "npm": {
+          "dependencies": ["@supabase/supabase-js", "zod"]
+        }
+      },
+      "questions": [
+        "Which tables require row-level security before release?",
+        "Which keys are public publishable keys vs server-only keys?",
+        "Which policies must be tested with negative cases?"
+      ]
+    },
+    {
+      "id": "database:laravel-postgres",
+      "name": "Laravel PostgreSQL Baseline",
+      "category": "database",
+      "surfaces": ["admin", "database"],
+      "risk": "high",
+      "summary": "Laravel/PostgreSQL persistence review pack for migrations, policies and seed safety.",
+      "skills": ["database-architect", "security-reviewer", "test-engineer"],
+      "policies": ["database-security", "data-protection"],
+      "quality_gates": ["security-check", "architecture-check"],
+      "packages": {},
+      "questions": [
+        "Which models require policies before Filament resources are exposed?",
+        "Which migrations need rollback and backup planning?",
+        "Which seed data is safe outside local development?"
+      ]
+    },
+    {
+      "id": "security:web-baseline",
+      "name": "Web and API Security Baseline",
+      "category": "security",
+      "surfaces": ["web", "api", "mobile"],
+      "risk": "high",
+      "summary": "Validation, headers, rate limits, JWT/JWK handling and API authorization review.",
+      "skills": ["security-reviewer", "backend-clean-architect", "test-engineer"],
+      "policies": ["secure-coding", "api-security", "data-protection", "supply-chain-security"],
+      "quality_gates": ["security-check"],
+      "packages": {
+        "npm": {
+          "dependencies": ["@fastify/helmet", "@fastify/rate-limit", "jose", "zod"]
+        }
+      },
+      "questions": [
+        "Which endpoints are unauthenticated by design?",
+        "Which claims or roles authorize sensitive actions?",
+        "Which negative authorization tests are mandatory?"
+      ]
+    },
+    {
+      "id": "security:desktop-baseline",
+      "name": "Desktop Security Baseline",
+      "category": "security",
+      "surfaces": ["desktop"],
+      "risk": "high",
+      "summary": "Desktop permissions, local secret storage, signing and update channel review.",
+      "skills": ["security-reviewer", "devops-engineer", "test-engineer"],
+      "policies": ["secure-coding", "data-protection", "infrastructure-security", "supply-chain-security"],
+      "quality_gates": ["security-check"],
+      "packages": {},
+      "questions": [
+        "Which OS permissions are strictly necessary?",
+        "Where are local credentials stored?",
+        "How are updates signed and verified?"
+      ]
+    },
+    {
+      "id": "security:laravel-baseline",
+      "name": "Laravel Security Baseline",
+      "category": "security",
+      "surfaces": ["admin", "web", "api"],
+      "risk": "high",
+      "summary": "Laravel policies, gates, middleware, CSRF/session posture and admin authorization review.",
+      "skills": ["security-reviewer", "backend-clean-architect", "test-engineer"],
+      "policies": ["secure-coding", "api-security", "data-protection", "supply-chain-security"],
+      "quality_gates": ["security-check"],
+      "packages": {},
+      "questions": [
+        "Which users can access each Filament panel?",
+        "Which model policies block unauthorized resource actions?",
+        "Which admin actions need audit logs?"
+      ]
+    },
+    {
+      "id": "admin:filament-php",
+      "name": "Filament PHP Admin Panel",
+      "category": "admin",
+      "surfaces": ["admin", "web"],
+      "risk": "high",
+      "summary": "Filament admin panel pack for Laravel projects.",
+      "skills": ["backend-clean-architect", "frontend-design-engineer", "security-reviewer", "test-engineer"],
+      "policies": ["secure-coding", "data-protection", "database-security", "supply-chain-security"],
+      "quality_gates": ["security-check", "ui-quality-check"],
+      "packages": {
+        "composer": {
+          "dependencies": ["filament/filament"]
+        }
+      },
+      "manual_steps": [
+        "Run the Filament installer command required by the selected Filament major version.",
+        "Create policies before exposing sensitive resources.",
+        "Add audit logging for destructive admin actions."
+      ],
+      "questions": [
+        "Which panel users and roles exist?",
+        "Which resources are read-only at first?",
+        "Which destructive actions need confirmation and audit evidence?"
+      ]
+    },
+    {
+      "id": "ai:openrouter",
+      "name": "OpenRouter Model Router",
+      "category": "ai",
+      "surfaces": ["web", "mobile", "desktop", "api"],
+      "risk": "high",
+      "summary": "OpenRouter API configuration using environment variables, model selection and cost guardrails.",
+      "skills": ["ai-integration-engineer", "security-reviewer", "test-engineer"],
+      "policies": ["secure-coding", "api-security", "data-protection", "supply-chain-security"],
+      "quality_gates": ["security-check", "api-contract-check"],
+      "packages": {
+        "npm": {
+          "dependencies": ["openai", "zod"]
+        },
+        "python": {
+          "dependencies": ["openai", "pydantic"]
+        }
+      },
+      "questions": [
+        "Which model is the default and which models are allowed as fallback?",
+        "Where are API keys stored in each environment?",
+        "What request logging is safe without exposing prompts or secrets?",
+        "What budget, rate limit and timeout protect the integration?"
+      ]
+    }
+  ]
+}

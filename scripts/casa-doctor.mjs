@@ -21,6 +21,10 @@ const requiredCorePaths = [
   ".casa/kernel/principles/architecture.md",
   ".casa/kernel/principles/stack.md",
   ".casa/kernel/principles/automation.md",
+  ".casa/kernel/standards/ai.md",
+  ".casa/kernel/standards/harness.md",
+  ".casa/kernel/standards/skill-marketplace.md",
+  ".casa/kernel/standards/stack-composition.md",
   ".casa/kernel/policies/secure-coding.md",
   ".casa/kernel/policies/api-security.md",
   ".casa/kernel/policies/database-security.md",
@@ -34,6 +38,8 @@ const requiredCorePaths = [
   ".casa/mission-control/handoff-template.md",
   ".casa/mission-control/risk-gate-template.md",
   ".casa/runtime/missions/README.md",
+  ".casa/runtime/history/README.md",
+  ".casa/runtime/recipes/README.md",
   ".casa/context-capsules/frontend-dashboard/capsule.md",
   ".casa/context-capsules/api-contract/capsule.md",
   ".casa/context-capsules/legacy-modernization/capsule.md",
@@ -45,6 +51,10 @@ const requiredCorePaths = [
   ".casa/quality-gates/ui-quality-check.md",
   ".casa/quality-gates/legacy-safety-check.md",
   ".casa/registry/skills.yaml",
+  ".casa/registry/recipes.json",
+  ".casa/registry/skill-marketplace.json",
+  ".casa/registry/stacks.json",
+  ".casa/registry/skills.lock.json",
   ".casa/registry/agents.yaml",
   ".casa/registry/adapters.yaml",
   ".casa/registry/workflows.yaml",
@@ -55,7 +65,12 @@ const requiredCorePaths = [
   ".casa/governance/permissions/agent-permissions.md",
   ".casa/governance/permissions/protected-files.md",
   ".casa/governance/permissions/dangerous-actions.md",
+  ".casa/capabilities/skills/stack-composer/SKILL.md",
+  ".casa/capabilities/skills/ai-integration-engineer/SKILL.md",
+  ".casa/capabilities/skills/software-delivery-facilitator/SKILL.md",
+  ".casa/capabilities/workflows/compose-application-stack.workflow.md",
   ".casa/specs/templates/greenfield-feature/spec.md",
+  ".casa/specs/templates/stack-composition/spec.md",
   ".casa/specs/templates/brownfield-modernization/spec.md",
   ".casa/specs/templates/api-endpoint/spec.md",
   ".casa/specs/templates/security-sensitive-feature/spec.md",
@@ -73,10 +88,16 @@ const requiredPackagePaths = [
   "CHANGELOG.md",
   "docs/vibe-coding-architecture.md",
   "docs/cli.md",
+  "docs/harness.md",
+  "docs/skill-marketplace.md",
+  "docs/stack-composition.md",
   "docs/publishing.md",
   "docs/agent-ide-examples.md",
   "examples/ide-adapters/README.md",
   "scripts/casa.mjs",
+  "scripts/lib/casa-harness.mjs",
+  "scripts/lib/casa-skill-marketplace.mjs",
+  "scripts/lib/casa-stack.mjs",
   "scripts/casa-doctor.mjs",
   "scripts/generate-adapters.mjs",
   "scripts/test-cli.mjs",
@@ -92,6 +113,8 @@ const requiredManifestSnippets = [
   "agent_native:",
   "adapters:",
   "context:",
+  "stack_composition:",
+  "harness:",
   "governance:",
   "protected_paths:",
   "legacy:"
@@ -223,6 +246,7 @@ function assertSpecs() {
   let localFailures = 0
   const specFiles = [
     ".casa/specs/templates/greenfield-feature/spec.md",
+    ".casa/specs/templates/stack-composition/spec.md",
     ".casa/specs/templates/brownfield-modernization/spec.md",
     ".casa/specs/templates/api-endpoint/spec.md",
     ".casa/specs/templates/security-sensitive-feature/spec.md"
@@ -242,6 +266,118 @@ function assertSpecs() {
 
   if (localFailures === 0) {
     pass("Spec templates include acceptance criteria and risks")
+  }
+}
+
+function assertStackCatalog() {
+  if (!exists(".casa/registry/stacks.json")) {
+    fail("Missing stack catalog")
+    return
+  }
+
+  let catalog
+  try {
+    catalog = JSON.parse(readText(".casa/registry/stacks.json"))
+  } catch {
+    fail("Stack catalog must be valid JSON")
+    return
+  }
+
+  const packs = catalog.packs || []
+  const requiredPacks = ["frontend:react-app", "backend:fastify-api", "database:postgres-prisma", "security:web-baseline", "ai:openrouter", "admin:filament-php"]
+  let localFailures = 0
+
+  for (const packId of requiredPacks) {
+    const pack = packs.find((entry) => entry.id === packId)
+    if (!pack) {
+      localFailures += 1
+      fail(`Stack catalog missing pack: ${packId}`)
+      continue
+    }
+    if (!pack.summary || !pack.category || !Array.isArray(pack.skills) || pack.skills.length === 0) {
+      localFailures += 1
+      fail(`Stack pack is incomplete: ${packId}`)
+    }
+  }
+
+  if (!Array.isArray(catalog.presets) || catalog.presets.length === 0) {
+    localFailures += 1
+    fail("Stack catalog must declare presets")
+  }
+
+  if (localFailures === 0) {
+    pass("Stack catalog includes core packs and presets")
+  }
+}
+
+function assertRecipeCatalog() {
+  if (!exists(".casa/registry/recipes.json")) {
+    fail("Missing recipe catalog")
+    return
+  }
+
+  let catalog
+  try {
+    catalog = JSON.parse(readText(".casa/registry/recipes.json"))
+  } catch {
+    fail("Recipe catalog must be valid JSON")
+    return
+  }
+
+  const recipes = catalog.recipes || []
+  const requiredRecipes = ["create-web-saas", "add-openrouter-ai", "harden-web-security", "prepare-docker-deploy"]
+  let localFailures = 0
+
+  for (const recipeId of requiredRecipes) {
+    const recipe = recipes.find((entry) => entry.id === recipeId)
+    if (!recipe) {
+      localFailures += 1
+      fail(`Recipe catalog missing recipe: ${recipeId}`)
+      continue
+    }
+    if (!recipe.summary || !recipe.category || !Array.isArray(recipe.steps) || recipe.steps.length === 0) {
+      localFailures += 1
+      fail(`Recipe is incomplete: ${recipeId}`)
+    }
+  }
+
+  if (localFailures === 0) {
+    pass("Recipe catalog includes core terminal workflows")
+  }
+}
+
+function assertSkillMarketplace() {
+  let localFailures = 0
+  const marketplacePath = ".casa/registry/skill-marketplace.json"
+  const lockPath = ".casa/registry/skills.lock.json"
+  let marketplace = null
+
+  for (const filePath of [marketplacePath, lockPath]) {
+    if (!exists(filePath)) {
+      localFailures += 1
+      fail(`Missing skill marketplace file: ${filePath}`)
+      continue
+    }
+    try {
+      const parsed = JSON.parse(readText(filePath))
+      if (filePath === marketplacePath) {
+        marketplace = parsed
+      }
+    } catch {
+      localFailures += 1
+      fail(`Skill marketplace file must be valid JSON: ${filePath}`)
+    }
+  }
+
+  if (marketplace) {
+    if (!marketplace.github?.manifest || !marketplace.install_policy?.pin_to_commit) {
+      localFailures += 1
+      fail("Skill marketplace must define GitHub manifest and commit pinning policy")
+    }
+  }
+
+  if (localFailures === 0) {
+    pass("Skill marketplace config and lockfile exist")
   }
 }
 
@@ -446,6 +582,9 @@ assertManifest()
 assertAgentsFile()
 assertSkills()
 assertSpecs()
+assertStackCatalog()
+assertRecipeCatalog()
+assertSkillMarketplace()
 assertPolicies()
 assertGeneratedAdapters()
 assertContextMaps()

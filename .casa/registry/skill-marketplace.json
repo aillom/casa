@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "description": "C.A.S.A skill marketplace search and trust configuration.",
+  "github": {
+    "topics": ["casa-skill", "casa-skills"],
+    "manifest": "casa.skill.json",
+    "default_entrypoint": "SKILL.md"
+  },
+  "trusted_publishers": [
+    {
+      "id": "aillom",
+      "kind": "github_owner",
+      "owner": "aillom",
+      "trust": "curated"
+    },
+    {
+      "id": "aillomai",
+      "kind": "github_owner",
+      "owner": "aillomai",
+      "trust": "curated"
+    }
+  ],
+  "install_policy": {
+    "pin_to_commit": true,
+    "allow_extensions": [".md", ".json"],
+    "deny_scripts": true,
+    "audit_before_install": true
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "version": "0.1.0",
+  "description": "Terminal-first C.A.S.A recipes for governed software creation.",
+  "recipes": [
+    {
+      "id": "create-web-saas",
+      "name": "Create Web SaaS",
+      "category": "app",
+      "summary": "Generate a governed web SaaS path with frontend, API, database, security and validation steps.",
+      "mode": "greenfield",
+      "preset": "web-saas",
+      "templates": ["greenfield-next-nest-postgres"],
+      "skills": ["stack-composer", "frontend-design-engineer", "backend-clean-architect", "database-architect", "security-reviewer", "test-engineer"],
+      "steps": [
+        "Create a mission and stack composition spec.",
+        "Generate the stack plan from the web SaaS preset.",
+        "Install dependencies only after reviewing the plan.",
+        "Create API contracts before shared endpoints.",
+        "Add authentication and authorization before exposing private routes.",
+        "Run typecheck, tests, security scan and dependency review."
+      ],
+      "commands": [
+        { "phase": "plan", "run": "casa compose --preset web-saas --name <app-name>" },
+        { "phase": "validate", "run": "casa check" }
+      ],
+      "evidence": ["stack plan", "lockfile diff", "API contract", "test output", "security review notes"]
+    },
+    {
+      "id": "create-mobile-app",
+      "name": "Create Mobile App",
+      "category": "app",
+      "summary": "Generate an Expo mobile app path with backend, Supabase and mobile security checks.",
+      "mode": "greenfield",
+      "preset": "mobile-app",
+      "skills": ["stack-composer", "frontend-design-engineer", "backend-clean-architect", "database-architect", "security-reviewer", "test-engineer"],
+      "steps": [
+        "Select mobile routes and navigation boundaries.",
+        "Generate a mobile stack plan.",
+        "Decide which data can be stored on device.",
+        "Configure API and Supabase keys with environment separation.",
+        "Validate permissions, offline behavior and auth state transitions."
+      ],
+      "commands": [
+        { "phase": "plan", "run": "casa compose --preset mobile-app --name <app-name>" },
+        { "phase": "validate", "run": "casa check" }
+      ],
+      "evidence": ["stack plan", "device storage decision", "permission review", "test output"]
+    },
+    {
+      "id": "create-desktop-app",
+      "name": "Create Desktop App",
+      "category": "app",
+      "summary": "Generate a Tauri desktop app path with React, SQLite and desktop security review.",
+      "mode": "greenfield",
+      "preset": "desktop-app",
+      "skills": ["stack-composer", "frontend-design-engineer", "security-reviewer", "devops-engineer", "test-engineer"],
+      "steps": [
+        "Define native capabilities and deny everything else.",
+        "Generate a desktop stack plan.",
+        "Plan local storage, signing and update channels.",
+        "Review filesystem, shell and network permissions.",
+        "Validate build and security gates before distribution."
+      ],
+      "commands": [
+        { "phase": "plan", "run": "casa compose --preset desktop-app --name <app-name>" },
+        { "phase": "validate", "run": "casa check" }
+      ],
+      "evidence": ["stack plan", "permission review", "signing plan", "build output"]
+    },
+    {
+      "id": "create-filament-admin",
+      "name": "Create Filament Admin",
+      "category": "admin",
+      "summary": "Generate a Laravel Filament admin path with policies, database review and audit steps.",
+      "mode": "greenfield",
+      "preset": "filament-admin",
+      "skills": ["stack-composer", "backend-clean-architect", "frontend-design-engineer", "database-architect", "security-reviewer", "test-engineer"],
+      "steps": [
+        "Define panel users, roles and admin-only routes.",
+        "Generate the Filament stack plan.",
+        "Create model policies before exposing resources.",
+        "Add confirmation and audit logs for destructive actions.",
+        "Run authorization tests and security review."
+      ],
+      "commands": [
+        { "phase": "plan", "run": "casa compose --preset filament-admin --name <app-name>" },
+        { "phase": "validate", "run": "casa check" }
+      ],
+      "evidence": ["stack plan", "policy list", "authorization tests", "audit decision"]
+    },
+    {
+      "id": "add-openrouter-ai",
+      "name": "Add OpenRouter AI",
+      "category": "ai",
+      "summary": "Add OpenRouter model routing with env-only secrets, model config and AI safety checks.",
+      "mode": "hybrid",
+      "packs": ["ai:openrouter"],
+      "skills": ["ai-integration-engineer", "security-reviewer", "test-engineer"],
+      "steps": [
+        "Generate OpenRouter config placeholders.",
+        "Choose default model and allowed fallbacks.",
+        "Validate model input and output boundaries.",
+        "Add cost, timeout, retry and rate-limit decisions.",
+        "Test provider errors and malformed model output."
+      ],
+      "commands": [
+        { "phase": "configure", "run": "casa ai configure openrouter --model openai/gpt-5.2" },
+        { "phase": "plan", "run": "casa stack add ai:openrouter" }
+      ],
+      "evidence": ["AI config", "model decision", "provider error tests", "security review notes"]
+    },
+    {
+      "id": "harden-web-security",
+      "name": "Harden Web Security",
+      "category": "security",
+      "summary": "Apply a web/API security baseline with headers, rate limits, authorization and negative tests.",
+      "mode": "hybrid",
+      "packs": ["security:web-baseline"],
+      "skills": ["security-reviewer", "backend-clean-architect", "test-engineer"],
+      "steps": [
+        "List public endpoints and explicit authorization decisions.",
+        "Add validation, secure headers and rate limits.",
+        "Add negative authorization tests.",
+        "Review logs for token, prompt, cookie and PII leakage.",
+        "Run security-check and dependency review."
+      ],
+      "commands": [
+        { "phase": "plan", "run": "casa stack add security:web-baseline" },
+        { "phase": "validate", "run": "casa gate list" }
+      ],
+      "evidence": ["endpoint auth matrix", "negative tests", "security gate output"]
+    },
+    {
+      "id": "setup-postgres-prisma",
+      "name": "Setup Postgres Prisma",
+      "category": "database",
+      "summary": "Add Postgres and Prisma with migration, rollback and tenant-boundary review.",
+      "mode": "hybrid",
+      "packs": ["database:postgres-prisma"],
+      "skills": ["database-architect", "security-reviewer", "test-engineer"],
+      "steps": [
+        "Define tenant boundaries and sensitive data ownership.",
+        "Generate database stack plan.",
+        "Create migration and rollback notes before schema changes.",
+        "Add indexes for critical read paths.",
+        "Run migration tests or smoke checks."
+      ],
+      "commands": [
+        { "phase": "plan", "run": "casa stack add database:postgres-prisma" },
+        { "phase": "migrate", "run": "npx prisma migrate dev" }
+      ],
+      "evidence": ["migration diff", "rollback notes", "tenant isolation tests"]
+    },
+    {
+      "id": "setup-supabase",
+      "name": "Setup Supabase",
+      "category": "database",
+      "summary": "Add Supabase client posture with key separation, RLS review and negative policy tests.",
+      "mode": "hybrid",
+      "packs": ["database:supabase"],
+      "skills": ["database-architect", "security-reviewer", "test-engineer"],
+      "steps": [
+        "Separate publishable client keys from service-role keys.",
+        "List tables requiring RLS before release.",
+        "Generate Supabase stack plan.",
+        "Write negative tests for protected data access.",
+        "Capture policy review evidence."
+      ],
+      "commands": [
+        { "phase": "plan", "run": "casa stack add database:supabase" }
+      ],
+      "evidence": ["RLS checklist", "key separation decision", "negative policy tests"]
+    },
+    {
+      "id": "prepare-docker-deploy",
+      "name": "Prepare Docker Deploy",
+      "category": "deploy",
+      "summary": "Prepare container deployment with env, health, rollback and smoke-test evidence.",
+      "mode": "hybrid",
+      "skills": ["devops-engineer", "security-reviewer", "test-engineer"],
+      "steps": [
+        "Identify runtime, build command, start command and health endpoint.",
+        "Create Dockerfile and compose files only after architecture review.",
+        "Keep secrets in environment or secret manager.",
+        "Add smoke tests and rollback notes.",
+        "Validate image build and health check."
+      ],
+      "commands": [
+        { "phase": "build", "run": "docker build -t <app-name> ." },
+        { "phase": "smoke", "run": "docker run --rm -p 3000:3000 <app-name>" }
+      ],
+      "evidence": ["image build output", "health check", "rollback notes"]
+    },
+    {
+      "id": "prepare-vercel-deploy",
+      "name": "Prepare Vercel Deploy",
+      "category": "deploy",
+      "summary": "Prepare frontend or fullstack deploy to Vercel with build, env and preview validation.",
+      "mode": "hybrid",
+      "skills": ["devops-engineer", "security-reviewer", "test-engineer"],
+      "steps": [
+        "Confirm framework, build command and output directory.",
+        "Map environment variables and mark secrets outside git.",
+        "Run local build before deploy.",
+        "Create preview deploy and capture URL.",
+        "Run smoke checks against preview before production."
+      ],
+      "commands": [
+        { "phase": "build", "run": "npm run build" },
+        { "phase": "deploy", "run": "vercel deploy" }
+      ],
+      "evidence": ["build output", "preview URL", "smoke checks"]
+    },
+    {
+      "id": "prepare-fly-deploy",
+      "name": "Prepare Fly Deploy",
+      "category": "deploy",
+      "summary": "Prepare Fly.io deploy with secrets, health checks, logs and rollback evidence.",
+      "mode": "hybrid",
+      "skills": ["devops-engineer", "security-reviewer", "test-engineer"],
+      "steps": [
+        "Confirm Dockerfile or builder strategy.",
+        "Define secrets and regions.",
+        "Add health checks before production deploy.",
+        "Run deploy and inspect logs.",
+        "Capture rollback command and smoke-test result."
+      ],
+      "commands": [
+        { "phase": "init", "run": "fly launch" },
+        { "phase": "deploy", "run": "fly deploy" },
+        { "phase": "logs", "run": "fly logs" }
+      ],
+      "evidence": ["deploy output", "logs", "health check", "rollback notes"]
+    }
+  ]
+}

@@ -72,6 +72,9 @@ The outcome is: **every mission ends with evidence.**
 - **Context**: `AGENTS.md`, specs, policies, repo maps, domain maps and generated agent guidance.
 - **Architecture**: boundaries, dependency direction, API contracts, ownership and modernization paths.
 - **Stack**: replaceable stack guidance for frontend, backend, database, DevOps, testing and documentation.
+- **Stack Composition**: governed install packs for web, mobile, desktop, backend, database, admin, security and AI providers.
+- **Terminal Harness**: recipes, templates, history and guided commands for software creation from the terminal.
+- **Skill Marketplace**: search, inspect, audit and install GitHub skills with commit pinning.
 - **Automation**: doctor checks, generated adapter sync checks, CI gates, sensors, security scans and drift detection.
 - **Governance**: risk levels, protected paths, security policies, permissions and review expectations.
 - **Modernization**: discovery, baselining, seams, strangler migration and retirement playbooks.
@@ -157,6 +160,15 @@ C.A.S.A exposes a small local CLI:
 ./casa commands
 ./casa generate adapters
 ./casa generate adapters --check
+./casa compose --preset ai-fullstack --openrouter --model openai/gpt-5.2
+./casa stack list
+./casa stack add frontend:react-app security:web-baseline
+./casa guide --goal "build and deploy a SaaS"
+./casa recipe plan create-web-saas --name "Customer Portal"
+./casa skill search stripe
+./casa template list
+./casa history list
+./casa ai configure openrouter --model openai/gpt-5.2
 ./casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
 ./casa capsule list
 ./casa gate list
@@ -172,8 +184,9 @@ Publishing instructions are in [docs/publishing.md](docs/publishing.md).
 1. Edit C.A.S.A Core files first, usually under `.casa`.
 2. Update specs, policies, docs or examples when behavior changes.
 3. Run `./casa generate adapters` after changing Core files that affect agent adapters.
-4. Run `./casa check` before opening or merging a PR.
-5. Do not edit generated adapter files directly.
+4. Use `./casa compose` or `./casa stack add` before installing new app dependencies.
+5. Run `./casa check` before opening or merging a PR.
+6. Do not edit generated adapter files directly.
 
 Generated outputs include:
 
@@ -234,6 +247,10 @@ Use C.A.S.A selectively in a live product:
 - `.casa/governance`: permissions, protected files, dangerous actions, sensors, evals and audit guidance.
 - `.casa/quality-gates`: versioned quality checks for missions and PRs.
 - `.casa/registry`: indexes of skills, agents, adapters, workflows and policies.
+- `.casa/registry/stacks.json`: governed stack packs for frontend, backend, database, security, mobile, desktop, admin and AI.
+- `.casa/registry/recipes.json`: prebuilt terminal recipes for software creation, security, database, AI and deploy workflows.
+- `.casa/registry/skill-marketplace.json`: trusted marketplace settings for remote skills.
+- `.casa/registry/skills.lock.json`: pinned external skill installs.
 - `.casa/cockpit`: future visual control-plane IA and screen definitions.
 - `.codex`, `.cursor`, `.agents`: generated tool-specific outputs.
 - `templates`: starter structures for greenfield and brownfield adoption.
@@ -277,6 +294,9 @@ Sensors define the validation expected before completion:
 
 - [C.A.S.A as vibe coding architecture](docs/vibe-coding-architecture.md)
 - [C.A.S.A CLI](docs/cli.md)
+- [C.A.S.A harness](docs/harness.md)
+- [Skill marketplace](docs/skill-marketplace.md)
+- [Stack composition](docs/stack-composition.md)
 - [Publishing to npm](docs/publishing.md)
 - [Agent and IDE examples](docs/agent-ide-examples.md)
 - [C.A.S.A cockpit IA](.casa/cockpit/information-architecture.md)
