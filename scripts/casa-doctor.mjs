@@ -1,5 +1,7 @@
 import fs from "node:fs"
 import { buildAdapterFiles, findAdapterDrift } from "./lib/casa-adapters.mjs"
+import { loadSensors } from "./lib/casa-verify.mjs"
+import { auditWorkUnits } from "./lib/casa-loop.mjs"
 
 function isCasaPackageRepo() {
   if (!exists("package.json")) {
@@ -262,11 +264,95 @@ function assertSpecs() {
       localFailures += 1
       fail(`Spec template missing risks section: ${specFile}`)
     }
+    if (!/- AC\d+:/.test(content) || !/the system shall/i.test(content)) {
+      localFailures += 1
+      fail(`Spec template missing EARS acceptance criteria with ids: ${specFile}`)
+    }
   }
 
   if (localFailures === 0) {
-    pass("Spec templates include acceptance criteria and risks")
+    pass("Spec templates include EARS acceptance criteria and risks")
   }
+}
+
+function manifestProtectedPaths() {
+  const lines = readText("casa.manifest.yaml").split("\n")
+  const start = lines.findIndex((line) => line === "  protected_paths:")
+  if (start === -1) {
+    return []
+  }
+
+  const items = []
+  for (const line of lines.slice(start + 1)) {
+    if (line.startsWith("    - ")) {
+      items.push(line.slice(6).replace(/^["']|["']$/g, ""))
+      continue
+    }
+    if (line.trim() !== "" && !line.startsWith("    ")) {
+      break
+    }
+  }
+  return items
+}
+
+function assertClaudeEnforcement() {
+  let localFailures = 0
+  const settingsPath = ".claude/settings.json"
+  const guardPath = ".casa/governance/hooks/protected-path-guard.mjs"
+
+  if (!exists(settingsPath)) {
+    fail(`Missing generated Claude settings: ${settingsPath}`)
+    return
+  }
+
+  let settings
+  try {
+    settings = JSON.parse(readText(settingsPath))
+  } catch {
+    fail(`${settingsPath} must be valid JSON`)
+    return
+  }
+
+  const deny = settings.permissions?.deny || []
+
+  for (const glob of manifestProtectedPaths()) {
+    if (!deny.includes(`Edit(${glob})`)) {
+      localFailures += 1
+      fail(`Claude settings deny is missing protected path: Edit(${glob})`)
+    }
+  }
+
+  if (!deny.includes("Read(.env)")) {
+    localFailures += 1
+    fail("Claude settings must deny Read(.env)")
+  }
+
+  if (!exists(guardPath)) {
+    localFailures += 1
+    fail(`Missing protected-path guard hook: ${guardPath}`)
+  }
+
+  if (!JSON.stringify(settings.hooks || {}).includes("protected-path-guard.mjs")) {
+    localFailures += 1
+    fail("Claude settings PreToolUse hook is not wired to the protected-path guard")
+  }
+
+  if (localFailures === 0) {
+    pass("Claude enforcement (deny-first + PreToolUse guard) covers protected paths")
+  }
+}
+
+function assertWorkUnits() {
+  const failures = auditWorkUnits({ cwd: process.cwd() })
+
+  if (failures.length > 0) {
+    for (const message of failures) {
+      fail(message)
+    }
+    return
+  }
+
+  pass("Spec work units are consistent")
 }
 
 function assertStackCatalog() {
@@ -443,22 +529,26 @@ function assertContextMaps() {
 
 function assertSensors() {
   let localFailures = 0
-  const sensorFiles = [
-    ".casa/governance/sensors/lint.sensor.md",
-    ".casa/governance/sensors/typecheck.sensor.md",
-    ".casa/governance/sensors/test.sensor.md",
-    ".casa/governance/sensors/security-scan.sensor.md"
-  ]
+  const requiredIds = ["lint", "typecheck", "test", "security-scan"]
+  const sensors = loadSensors({ cwd: process.cwd() })
+  const sensorIds = new Set(sensors.map((sensor) => sensor.id))
 
-  for (const sensorFile of sensorFiles) {
-    if (!exists(sensorFile)) {
+  for (const requiredId of requiredIds) {
+    if (!sensorIds.has(requiredId)) {
       localFailures += 1
-      fail(`Missing governance sensor: ${sensorFile}`)
+      fail(`Missing governance sensor: ${requiredId}`)
+    }
+  }
+
+  for (const sensor of sensors) {
+    if (!sensor.command && !sensor.detect && !sensor.manual) {
+      localFailures += 1
+      fail(`Sensor is not executable (needs command, detect or manual): ${sensor.file}`)
     }
   }
 
   if (localFailures === 0) {
-    pass("Governance sensors exist")
+    pass("Governance sensors are executable or declared manual")
   }
 }
 
@@ -582,6 +672,7 @@ assertManifest()
 assertAgentsFile()
 assertSkills()
 assertSpecs()
+assertWorkUnits()
 assertStackCatalog()
 assertRecipeCatalog()
 assertSkillMarketplace()
@@ -589,6 +680,7 @@ assertPolicies()
 assertGeneratedAdapters()
 assertContextMaps()
 assertSensors()
+assertClaudeEnforcement()
 assertControlPlaneBlocks()
 if (isCasaPackageRepo()) {
   assertIdeExamples()

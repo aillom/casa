@@ -1,3 +1,11 @@
+---
+id: lint
+detect: lint
+when:
+  - "**/*.{ts,tsx,js,jsx,mjs,cjs}"
+optional: true
+---
+
 # Sensor: lint
 
 ## Purpose
@@ -6,7 +14,8 @@ Catch style, syntax and static quality issues.
 
 ## Command
 
-Use the repository lint command when one exists.
+Auto-detected by `casa verify`: a `lint` package script when present, otherwise a
+detected ESLint config. Set `command:` in this file's frontmatter to override.
 
 ## Required when
 
@@ -16,4 +25,4 @@ Use the repository lint command when one exists.
 
 ## Evidence
 
-Record the command and result in the PR or final response.
+`casa verify --sensors lint` records the command and exit code in the harness ledger.

@@ -2,6 +2,16 @@
 
 All notable changes to C.A.S.A will be documented in this file.
 
+## 0.2.0
+
+- Generate `AGENTS.md` from the C.A.S.A core (principles and protected paths) as a first-class, drift-checked adapter output instead of a hand-maintained file.
+- Add executable governance sensors (frontmatter `detect` / `command` / `manual` with `when` globs) and `casa verify` to run them and block on failures by exit code.
+- Add a gated spec loop: `casa spec new|plan|tasks|implement|status|list` advances `.casa/specs/<slug>/` work units only when each phase is complete and marked `status: ready`.
+- Adopt EARS acceptance criteria with stable requirement ids (`AC1`, `AC2`) across spec templates, add `casa spec check` for EARS/uniqueness/task-coverage validation, and block the plan gate on non-EARS criteria.
+- Generate deterministic enforcement for Claude Code: a deny-first `.claude/settings.json` from `protected_paths` plus a `PreToolUse` guard hook that blocks edits to protected paths (exit code 2).
+- Extend `casa doctor` to validate executable sensors, spec work-unit integrity and protected-path enforcement coverage.
+- Add `docs/improvement-roadmap.md` with the analysis verdict and the prioritized next steps.
+
 ## 0.1.6
 
 - Add GitHub skill marketplace search, inspect, install, audit, update and remove commands.

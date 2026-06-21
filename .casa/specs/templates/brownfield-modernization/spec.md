@@ -34,9 +34,11 @@ Describe what part of the legacy system will be understood, protected or moderni
 
 ## Acceptance Criteria
 
-- Given existing behavior...
-- When modernization is applied...
-- Then behavior remains compatible...
+> EARS format with stable ids. Characterization and smoke tests reference them as `(AC1)`.
+
+- AC1: WHEN the modernized path runs THE SYSTEM SHALL preserve the documented legacy behavior
+- AC2: WHILE the strangler migration is in progress THE SYSTEM SHALL keep the old path available
+- AC3: IF the new path fails THEN THE SYSTEM SHALL fall back or roll back without data loss
 
 ## Risks and Questions
 

@@ -73,10 +73,12 @@ const requiredCorePaths = [
   ".casa/context/repo-map/modules.md",
   ".casa/context/domain-map/domains.md",
   ".casa/governance/sensors/test.sensor.md",
+  ".casa/governance/hooks/protected-path-guard.mjs",
   ".casa/generated/adapters.manifest.json",
   ".agents/casa-agent-guide.md",
   ".codex/skills/casa-skill-router/SKILL.md",
-  ".cursor/rules/00-casa-context.mdc"
+  ".cursor/rules/00-casa-context.mdc",
+  ".claude/settings.json"
 ]
 
 const requiredPackagePaths = [

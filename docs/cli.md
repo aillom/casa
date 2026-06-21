@@ -12,6 +12,8 @@ From this repository:
 ./casa init ../my-app --mode greenfield
 ./casa doctor
 ./casa check
+./casa verify
+./casa spec new auth-login --title "Auth Login"
 ./casa commands
 ./casa generate adapters
 ./casa compose --preset web-saas --name "Customer Portal"
@@ -68,6 +70,7 @@ It copies:
 - `.agents`
 - `.codex`
 - `.cursor`
+- `.claude/settings.json`
 
 It also creates `.casa/commands.md`, a short command cheat sheet for the project.
 
@@ -104,7 +107,47 @@ Runs the full local validation chain:
 
 Regenerates agent-specific adapter outputs from C.A.S.A Core.
 
+This includes the generated `AGENTS.md` and the deny-first `.claude/settings.json`
+derived from `casa.manifest.yaml` protected paths.
+
 Use `--check` to validate sync without writing files.
+
+### `casa verify`
+
+Runs governance sensors and blocks on failures by exit code. Sensors live in
+`.casa/governance/sensors/*.sensor.md` and declare executable frontmatter
+(`detect` / `command` / `manual` with `when` globs).
+
+```bash
+./casa verify
+./casa verify --sensors lint,typecheck,test
+./casa verify --changed
+./casa verify --strict
+```
+
+`--changed` only runs sensors whose `when` globs match files changed against git HEAD.
+`--strict` treats skipped sensors as failures. Results are recorded in the harness ledger.
+
+### `casa spec`
+
+Drives the gated `spec -> plan -> tasks -> implement` loop over a work unit in
+`.casa/specs/<slug>/`. A phase will not advance until the prior phase has no `<...>`
+placeholders and is marked `status: ready` in its frontmatter.
+
+```bash
+./casa spec new auth-login --title "Auth Login" --mode greenfield
+./casa spec plan auth-login
+./casa spec tasks auth-login
+./casa spec check auth-login
+./casa spec implement auth-login
+./casa spec list
+./casa spec status auth-login
+```
+
+Acceptance criteria use EARS notation with stable ids (`- AC1: WHEN ... THE SYSTEM SHALL ...`).
+`casa spec check` validates the EARS grammar, unique ids, and which criteria are covered by a
+task (tasks reference criteria as `(AC1)`). The spec gate blocks `plan` until every criterion is
+valid EARS. `casa spec implement` only runs after all phases are ready, and then runs `casa verify`.
 
 ### `casa compose`
 

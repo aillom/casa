@@ -35,9 +35,11 @@ Describe the sensitive behavior and why it is needed.
 
 ## Acceptance Criteria
 
-- Given...
-- When...
-- Then...
+> EARS format with stable ids. Negative and abuse-case tests reference them as `(AC1)`.
+
+- AC1: WHEN an unauthorized principal requests a protected resource THE SYSTEM SHALL deny access
+- AC2: IF input is malformed or hostile THEN THE SYSTEM SHALL reject it and log the attempt
+- AC3: THE SYSTEM SHALL keep secrets and tokens out of responses, errors and logs
 
 ## Tests
 

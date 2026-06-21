@@ -51,6 +51,16 @@ import {
   renderSkillInspection,
   searchGithubSkills
 } from "./lib/casa-skill-marketplace.mjs"
+import { loadSensors, runSensors } from "./lib/casa-verify.mjs"
+import {
+  checkWorkUnit,
+  createPlan,
+  createSpec,
+  createTasks,
+  implementWorkUnit,
+  listWorkUnits,
+  workUnitStatus
+} from "./lib/casa-loop.mjs"
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url))
 const packageRoot = path.resolve(scriptDir, "..")
@@ -63,6 +73,14 @@ Usage:
   casa commands
   casa doctor
   casa check
+  casa verify [--sensors id1,id2] [--changed] [--strict]
+  casa spec new <slug> [--title "Title"] [--mode greenfield|brownfield|hybrid]
+  casa spec plan <slug>
+  casa spec tasks <slug>
+  casa spec check <slug> [--strict]
+  casa spec implement <slug> [--changed] [--strict]
+  casa spec list
+  casa spec status <slug>
   casa generate adapters [--check]
   casa compose [--preset web-saas|mobile-app|desktop-app|filament-admin|ai-fullstack] [--name "App"] [--openrouter] [--model model]
   casa stack list [--category name] [--surface name]
@@ -96,6 +114,8 @@ Commands:
   commands            Print short local commands and aliases.
   doctor              Validate C.A.S.A structure and governance.
   check               Run structure check, adapter sync check and doctor.
+  verify              Run governance sensors and block on failures by exit code.
+  spec                Drive the spec -> plan -> tasks -> implement loop with gates.
   generate adapters   Generate agent-specific adapter outputs.
   compose             Ask stack questions and generate a stack plan, spec and optional AI config.
   stack               List, inspect, plan or install governed stack packs.
@@ -427,7 +447,7 @@ npx @aillomai/casa check
 
 function adapterSources(adapterNames) {
   const adapterMap = new Map([
-    ["claude", [{ from: "examples/ide-adapters/claude/CLAUDE.md", to: "CLAUDE.md" }, { from: "examples/ide-adapters/claude/.claude", to: ".claude" }]],
+    ["claude", [{ from: "examples/ide-adapters/claude/CLAUDE.md", to: "CLAUDE.md" }, { from: "examples/ide-adapters/claude/.claude/agents", to: ".claude/agents" }]],
     ["devin", [{ from: "examples/ide-adapters/devin/knowledge", to: "knowledge" }]],
     ["github-copilot", [{ from: "examples/ide-adapters/github-copilot/.github", to: ".github" }]],
     ["copilot", [{ from: "examples/ide-adapters/github-copilot/.github", to: ".github" }]],
@@ -486,7 +506,8 @@ function createInit(args) {
     { from: ".casa", to: ".casa" },
     { from: ".agents", to: ".agents" },
     { from: ".codex", to: ".codex" },
-    { from: ".cursor", to: ".cursor" }
+    { from: ".cursor", to: ".cursor" },
+    { from: ".claude/settings.json", to: ".claude/settings.json" }
   ]
   const sources = [...coreSources, ...adapterSources(adapters)]
   const plan = [...buildCopyPlan(sources, targetRoot), ...commandShortcutFiles(targetRoot)]
@@ -1442,6 +1463,196 @@ async function createCompose(args) {
   }
 }
 
+function printWorkUnit(unit) {
+  console.log(unit.slug)
+  for (const phase of unit.phases) {
+    const state = !phase.exists
+      ? "missing"
+      : phase.ready
+        ? "ready"
+        : `${phase.status} (${phase.placeholders} placeholder${phase.placeholders === 1 ? "" : "s"})`
+    console.log(`  ${phase.phase.padEnd(6)} ${state}`)
+  }
+}
+
+function createSpecCommand(action, args) {
+  if (!action || action === "list") {
+    const units = listWorkUnits({ cwd: process.cwd() })
+    if (units.length === 0) {
+      console.log("No spec work units found. Create one with: casa spec new <slug>")
+      return
+    }
+    for (const unit of units) {
+      printWorkUnit(unit)
+    }
+    return
+  }
+
+  if (action === "status") {
+    const slug = positionalArgs(args)[0]
+    if (!slug) {
+      console.error("Spec slug is required.")
+      process.exit(1)
+    }
+    printWorkUnit(workUnitStatus({ cwd: process.cwd(), slug }))
+    return
+  }
+
+  if (action === "new") {
+    const slug = positionalArgs(args, new Set(["--title", "--mode"]))[0]
+    try {
+      const result = createSpec({
+        cwd: process.cwd(),
+        slug,
+        title: parseOption(args, "--title", ""),
+        mode: parseOption(args, "--mode", "greenfield"),
+        force: hasFlag(args, "--force")
+      })
+      console.log(`Created spec: ${path.relative(process.cwd(), result.filePath)}`)
+      console.log(`Next: complete the spec, set status: ready, then run: casa spec plan ${result.slug}`)
+      appendHarnessHistory({ cwd: process.cwd(), action: "spec.new", subject: result.slug, details: { phase: "spec" } })
+    } catch (error) {
+      console.error(error.message)
+      process.exit(1)
+    }
+    return
+  }
+
+  if (action === "plan" || action === "tasks") {
+    const slug = positionalArgs(args)[0]
+    if (!slug) {
+      console.error("Spec slug is required.")
+      process.exit(1)
+    }
+    try {
+      const builder = action === "plan" ? createPlan : createTasks
+      const result = builder({ cwd: process.cwd(), slug, force: hasFlag(args, "--force") })
+      const next = action === "plan" ? `casa spec tasks ${result.slug}` : `casa spec implement ${result.slug}`
+      console.log(`Created ${action}: ${path.relative(process.cwd(), result.filePath)}`)
+      console.log(`Next: complete it, set status: ready, then run: ${next}`)
+      appendHarnessHistory({ cwd: process.cwd(), action: `spec.${action}`, subject: result.slug, details: { phase: action } })
+    } catch (error) {
+      console.error(error.message)
+      process.exit(1)
+    }
+    return
+  }
+
+  if (action === "check") {
+    const slug = positionalArgs(args)[0]
+    if (!slug) {
+      console.error("Spec slug is required.")
+      process.exit(1)
+    }
+    const strict = hasFlag(args, "--strict")
+    const result = checkWorkUnit({ cwd: process.cwd(), slug })
+    console.log(`Spec check: ${result.slug}`)
+    for (const ac of result.criteria) {
+      console.log(`  ${ac.id}: ${ac.ears ? "EARS" : "INVALID"}`)
+    }
+    for (const entry of result.coverage) {
+      console.log(`  ${entry.id}: ${entry.covered ? "covered by a task" : "no task"}`)
+    }
+    for (const warning of result.warnings) {
+      console.log(`  WARN ${warning}`)
+    }
+    for (const error of result.errors) {
+      console.error(`  ERROR ${error}`)
+    }
+    const ok = result.errors.length === 0 && (!strict || result.warnings.length === 0)
+    appendHarnessHistory({
+      cwd: process.cwd(),
+      action: "spec.check",
+      subject: result.slug,
+      details: { errors: result.errors.length, warnings: result.warnings.length, criteria: result.criteria.length }
+    })
+    console.log(`Result: ${result.criteria.length} criteria, ${result.errors.length} error(s), ${result.warnings.length} warning(s)`)
+    process.exit(ok ? 0 : 1)
+  }
+
+  if (action === "implement") {
+    const slug = positionalArgs(args)[0]
+    if (!slug) {
+      console.error("Spec slug is required.")
+      process.exit(1)
+    }
+    try {
+      const { slug: resolved, verification } = implementWorkUnit({
+        cwd: process.cwd(),
+        slug,
+        changed: hasFlag(args, "--changed"),
+        strict: hasFlag(args, "--strict")
+      })
+      console.log(`Implement gate passed for "${resolved}": spec, plan and tasks are ready.`)
+      console.log("Running sensors (casa verify):")
+      for (const result of verification.results) {
+        console.log(`  ${result.status.toUpperCase().padEnd(7)} ${result.id}${result.detail ? ` - ${result.detail}` : ""}`)
+      }
+      console.log(`Result: ${verification.passed} passed, ${verification.failed} failed, ${verification.skipped} skipped`)
+      appendHarnessHistory({
+        cwd: process.cwd(),
+        action: "spec.implement",
+        subject: resolved,
+        details: { passed: verification.passed, failed: verification.failed, skipped: verification.skipped }
+      })
+      process.exit(verification.ok ? 0 : 1)
+    } catch (error) {
+      console.error(error.message)
+      process.exit(1)
+    }
+    return
+  }
+
+  console.error(`Unknown spec command: ${action}`)
+  process.exit(1)
+}
+
+function createVerifyCommand(args) {
+  const ids = parseCsvOption(args, "--sensors", [])
+  const changed = hasFlag(args, "--changed")
+  const strict = hasFlag(args, "--strict")
+  const available = loadSensors({ cwd: process.cwd() })
+
+  if (available.length === 0) {
+    console.error("No governance sensors found in .casa/governance/sensors.")
+    process.exit(1)
+  }
+
+  const knownIds = new Set(available.map((sensor) => sensor.id))
+  for (const id of ids) {
+    if (!knownIds.has(id)) {
+      console.error(`Unknown sensor: ${id}`)
+      console.error(`Available sensors: ${[...knownIds].join(", ")}`)
+      process.exit(1)
+    }
+  }
+
+  console.log(`C.A.S.A verify${ids.length > 0 ? ` (${ids.join(", ")})` : ""}${changed ? " --changed" : ""}`)
+  const { results, passed, failed, skipped, ok } = runSensors({ cwd: process.cwd(), ids, changed, strict })
+
+  for (const result of results) {
+    const label = result.status.toUpperCase().padEnd(7)
+    console.log(`  ${label} ${result.id}${result.detail ? ` - ${result.detail}` : ""}`)
+  }
+
+  console.log(`Result: ${passed} passed, ${failed} failed, ${skipped} skipped`)
+  appendHarnessHistory({
+    cwd: process.cwd(),
+    action: "verify",
+    subject: ids.join(",") || "all",
+    details: {
+      changed,
+      strict,
+      passed,
+      failed,
+      skipped,
+      results: results.map((result) => ({ id: result.id, status: result.status }))
+    }
+  })
+
+  process.exit(ok ? 0 : 1)
+}
+
 const [command, subcommand, ...rest] = process.argv.slice(2)
 
 if (!command || command === "help" || command === "--help" || command === "-h") {
@@ -1469,6 +1680,16 @@ if (command === "check") {
 
 if (command === "generate" && subcommand === "adapters") {
   runNodeScript("generate-adapters.mjs", rest)
+}
+
+if (command === "verify") {
+  createVerifyCommand([subcommand, ...rest].filter(Boolean))
+  process.exit(0)
+}
+
+if (command === "spec") {
+  createSpecCommand(subcommand, rest)
+  process.exit(0)
 }
 
 if (command === "compose") {

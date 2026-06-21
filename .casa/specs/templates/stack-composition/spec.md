@@ -53,10 +53,12 @@ Describe tenant boundaries, sensitive data ownership and migration risk for sele
 
 ## Acceptance Criteria
 
-- Given selected packs, when the stack plan is generated, then the plan includes install commands, skills, policies, quality gates and open questions.
-- Given OpenRouter is selected, when AI config is generated, then only environment variable names and example placeholders are written.
-- Given a security-sensitive pack is selected, when the mission is reviewed, then the security gate is included.
-- Given dependencies are installed, when validation runs, then dependency review and relevant tests are included in evidence.
+> EARS format with stable ids. Tasks and evidence reference them as `(AC1)`.
+
+- AC1: WHEN the stack plan is generated THE SYSTEM SHALL include install commands, skills, policies, quality gates and open questions
+- AC2: WHEN OpenRouter is selected THE SYSTEM SHALL write only environment variable names and example placeholders
+- AC3: IF a security-sensitive pack is selected THEN THE SYSTEM SHALL include the security gate in the mission
+- AC4: WHEN dependencies are installed THE SYSTEM SHALL record dependency review and relevant tests in evidence
 
 ## Risks and Questions
 

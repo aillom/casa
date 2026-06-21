@@ -17,6 +17,23 @@ casa history list
 casa check
 ```
 
+## Verification And Spec Gates
+
+The harness is not only suggestions: it can run and block.
+
+```bash
+casa spec new auth-login --title "Auth Login"   # spec -> plan -> tasks -> implement, gated
+casa spec plan auth-login                        # blocked until the spec is marked ready
+casa verify --changed                            # run governance sensors, block by exit code
+```
+
+- Sensors in `.casa/governance/sensors/*.sensor.md` declare executable frontmatter, so
+  `casa verify` actually runs lint, typecheck, tests and audits and fails on a non-zero exit.
+- The spec loop refuses to advance a phase until the previous phase has no `<...>` placeholders
+  and is marked `status: ready`.
+- `.claude/settings.json` is generated deny-first from `protected_paths`, with a `PreToolUse`
+  guard that blocks edits to protected paths. Enforcement is by the harness, not the prompt.
+
 ## Recipes
 
 Recipes are prebuilt terminal workflows stored in `.casa/registry/recipes.json`.

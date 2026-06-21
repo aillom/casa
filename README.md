@@ -157,6 +157,8 @@ C.A.S.A exposes a small local CLI:
 ./casa init ../my-app --mode greenfield
 ./casa doctor
 ./casa check
+./casa verify
+./casa spec new auth-login --title "Auth Login"
 ./casa commands
 ./casa generate adapters
 ./casa generate adapters --check
@@ -182,11 +184,13 @@ Publishing instructions are in [docs/publishing.md](docs/publishing.md).
 ## Daily Workflow
 
 1. Edit C.A.S.A Core files first, usually under `.casa`.
-2. Update specs, policies, docs or examples when behavior changes.
-3. Run `./casa generate adapters` after changing Core files that affect agent adapters.
-4. Use `./casa compose` or `./casa stack add` before installing new app dependencies.
-5. Run `./casa check` before opening or merging a PR.
-6. Do not edit generated adapter files directly.
+2. Drive new features through the gated spec loop: `./casa spec new`, then `plan`, `tasks`, `implement`.
+3. Update specs, policies, docs or examples when behavior changes.
+4. Run `./casa generate adapters` after changing Core files that affect agent adapters.
+5. Use `./casa compose` or `./casa stack add` before installing new app dependencies.
+6. Run `./casa verify --changed` to execute governance sensors before review.
+7. Run `./casa check` before opening or merging a PR.
+8. Do not edit generated adapter files directly.
 
 Generated outputs include:
 

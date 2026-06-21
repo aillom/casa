@@ -98,12 +98,27 @@
       "targetSha256": "1cf03cb756bbcb44992c68f0f55cc958ca0cad4e751203c4db3ba9457a968500"
     },
     {
+      "targetPath": "AGENTS.md",
+      "sourcePaths": [
+        "casa.manifest.yaml"
+      ],
+      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
+      "targetSha256": "a23dfb382486fa873fb9a82aa65260589ec58f810401bd267fb78c5ab34a0a19"
+    },
+    {
+      "targetPath": ".claude/settings.json",
+      "sourcePaths": [
+        "casa.manifest.yaml"
+      ],
+      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
+      "targetSha256": "db2544717b51513e212106a4b3e1f463fc7a338efe557878caab0e9cdfbca56c"
+    },
+    {
       "targetPath": ".cursor/rules/00-casa-context.mdc",
       "sourcePaths": [
-        "casa.manifest.yaml",
-        "AGENTS.md"
+        "casa.manifest.yaml"
       ],
-      "sourceSha256": "3239d93679f150787156edd1ff85cdaf6de3ea114cd01e410900572e9244663e",
+      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
       "targetSha256": "f9867e6cab898da99e694d65644af7a1ef193a75913c42b46b08652c7901f08a"
     },
     {
@@ -112,7 +127,7 @@
         "casa.manifest.yaml",
         ".casa/kernel/policies/secure-coding.md"
       ],
-      "sourceSha256": "89b8bf462f0998a49422183c3a29d98b59528bd96a15d017bec4a466eb97491d",
+      "sourceSha256": "22d323a336f50a3d2240a3c387c247021651aa557df33cdf5e654cbb28d347d5",
       "targetSha256": "cda837874c43feec1ec55ea4617bd6d9d102e204275315f05560258849dd59b9"
     },
     {
@@ -121,25 +136,23 @@
         "casa.manifest.yaml",
         ".casa/capabilities/workflows/modernize-legacy-module.workflow.md"
       ],
-      "sourceSha256": "add45441fd7d3b08f22b769d06447f5a2080a73ce4e9a063aea1ea379852422b",
+      "sourceSha256": "4d0f12880ad852bcc31fb5fcae17e4ba942c08b4e50a0923493924bbc8b59973",
       "targetSha256": "f681433b09b9626b92850b32699810784fdfe03c7aff1d767b950b3eab200357"
     },
     {
       "targetPath": ".agents/casa-agent-guide.md",
       "sourcePaths": [
-        "AGENTS.md",
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "3e13328633e2916ee5113b0a936d639026a48379c07e279a283b84f01279df54",
+      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
       "targetSha256": "7962bdf23949cc0c16b1a0249c13afef7affd788b177a5c336ddf8e6df7535ba"
     },
     {
       "targetPath": ".casa/generated/adapters/generic/AGENT-GUIDE.md",
       "sourcePaths": [
-        "AGENTS.md",
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "3e13328633e2916ee5113b0a936d639026a48379c07e279a283b84f01279df54",
+      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
       "targetSha256": "7962bdf23949cc0c16b1a0249c13afef7affd788b177a5c336ddf8e6df7535ba"
     },
     {

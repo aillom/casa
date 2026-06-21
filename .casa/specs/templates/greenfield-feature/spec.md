@@ -33,9 +33,13 @@ Describe entities and relationships.
 
 ## Acceptance Criteria
 
-- Given...
-- When...
-- Then...
+> EARS format with stable ids. Tasks and tests reference them as `(AC1)`.
+> Patterns: ubiquitous `THE SYSTEM SHALL ...`; event `WHEN ... THE SYSTEM SHALL ...`;
+> state `WHILE ... THE SYSTEM SHALL ...`; unwanted `IF ... THEN THE SYSTEM SHALL ...`;
+> optional `WHERE ... THE SYSTEM SHALL ...`.
+
+- AC1: WHEN <trigger> THE SYSTEM SHALL <expected response>
+- AC2: IF <error condition> THEN THE SYSTEM SHALL <safe response>
 
 ## Risks and Questions
 

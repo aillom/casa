@@ -108,6 +108,141 @@ try {
   run(["check"], projectRoot)
   run(["generate", "adapters", "--check"], projectRoot)
 
+  const generatedAgents = fs.readFileSync(path.join(projectRoot, "AGENTS.md"), "utf8")
+  if (!generatedAgents.includes("Generated from C.A.S.A Core") || !generatedAgents.includes("## Core principles")) {
+    console.error("AGENTS.md must be generated from the C.A.S.A core (with principles and protected paths).")
+    process.exit(1)
+  }
+
+  const verifyAll = run(["verify"], projectRoot)
+  if (!verifyAll.stdout.includes("Result:")) {
+    console.error("casa verify must print a sensor result summary.")
+    process.exit(1)
+  }
+
+  const sensorDir = path.join(projectRoot, ".casa/governance/sensors")
+  fs.writeFileSync(path.join(sensorDir, "smoke-pass.sensor.md"), `---\nid: smoke-pass\ncommand: node -e "process.exit(0)"\n---\n\n# Sensor: smoke pass\n`)
+  const verifyPass = run(["verify", "--sensors", "smoke-pass"], projectRoot)
+  if (!verifyPass.stdout.includes("PASS") || !verifyPass.stdout.includes("smoke-pass")) {
+    console.error("casa verify must run and pass an executable sensor command.")
+    process.exit(1)
+  }
+
+  fs.writeFileSync(path.join(sensorDir, "smoke-fail.sensor.md"), `---\nid: smoke-fail\ncommand: node -e "process.exit(1)"\n---\n\n# Sensor: smoke fail\n`)
+  const verifyFail = run(["verify", "--sensors", "smoke-fail"], projectRoot, { shouldFail: true })
+  if (!verifyFail.stdout.includes("FAIL")) {
+    console.error("casa verify must report and block on a failing sensor command.")
+    process.exit(1)
+  }
+
+  run(["verify", "--sensors", "does-not-exist"], projectRoot, { shouldFail: true })
+
+  fs.rmSync(path.join(sensorDir, "smoke-pass.sensor.md"))
+  fs.rmSync(path.join(sensorDir, "smoke-fail.sensor.md"))
+
+  // R3: spec -> plan -> tasks -> implement loop with gates
+  run(["spec", "new", "demo-feature", "--title", "Demo Feature"], projectRoot)
+  const demoDir = path.join(projectRoot, ".casa/specs/demo-feature")
+  assertExists(path.join(demoDir, "spec.md"))
+
+  run(["spec", "plan", "demo-feature"], projectRoot, { shouldFail: true })
+
+  fs.writeFileSync(
+    path.join(demoDir, "spec.md"),
+    `---\nslug: demo-feature\ntitle: Demo Feature\nphase: spec\nstatus: ready\nmode: greenfield\ncreated: 2026-06-21\n---\n\n# Spec: Demo Feature\n\n## Goal\n\nProvide a demo feature.\n\n## Acceptance Criteria\n\n- AC1: WHEN a user opens the demo THE SYSTEM SHALL render it.\n\n## Risks and Questions\n\n- None.\n`
+  )
+  run(["spec", "plan", "demo-feature"], projectRoot)
+  assertExists(path.join(demoDir, "plan.md"))
+
+  run(["spec", "tasks", "demo-feature"], projectRoot, { shouldFail: true })
+
+  fs.writeFileSync(
+    path.join(demoDir, "plan.md"),
+    `---\nslug: demo-feature\ntitle: Demo Feature\nphase: plan\nstatus: ready\ncreated: 2026-06-21\n---\n\n# Plan: Demo Feature\n\n## Approach\n\nBuild it simply.\n\n## Sensors To Run\n\n- test\n`
+  )
+  run(["spec", "tasks", "demo-feature"], projectRoot)
+  assertExists(path.join(demoDir, "tasks.md"))
+
+  run(["spec", "implement", "demo-feature"], projectRoot, { shouldFail: true })
+
+  fs.writeFileSync(
+    path.join(demoDir, "tasks.md"),
+    `---\nslug: demo-feature\ntitle: Demo Feature\nphase: tasks\nstatus: ready\ncreated: 2026-06-21\n---\n\n# Tasks: Demo Feature\n\n## Tasks\n\n- [ ] Implement the demo feature.\n\n## Validation\n\n- [ ] Required sensors pass.\n`
+  )
+  const implement = run(["spec", "implement", "demo-feature"], projectRoot)
+  if (!implement.stdout.includes("Implement gate passed") || !implement.stdout.includes("Result:")) {
+    console.error("casa spec implement must pass the gate and run sensors when all phases are ready.")
+    process.exit(1)
+  }
+
+  const specStatus = run(["spec", "status", "demo-feature"], projectRoot)
+  if (!specStatus.stdout.includes("ready")) {
+    console.error("casa spec status must report ready phases.")
+    process.exit(1)
+  }
+
+  run(["doctor"], projectRoot)
+
+  // R4: EARS acceptance criteria + requirement-id traceability
+  const specCheck = run(["spec", "check", "demo-feature"], projectRoot)
+  if (!specCheck.stdout.includes("AC1: EARS")) {
+    console.error("casa spec check must validate EARS acceptance criteria.")
+    process.exit(1)
+  }
+
+  fs.writeFileSync(
+    path.join(demoDir, "tasks.md"),
+    `---\nslug: demo-feature\ntitle: Demo Feature\nphase: tasks\nstatus: ready\ncreated: 2026-06-21\n---\n\n# Tasks: Demo Feature\n\n## Tasks\n\n- [ ] (AC1) Render the demo.\n\n## Validation\n\n- [ ] Required sensors pass.\n`
+  )
+  const specCheckCovered = run(["spec", "check", "demo-feature"], projectRoot)
+  if (!specCheckCovered.stdout.includes("AC1: covered by a task")) {
+    console.error("casa spec check must report acceptance-criterion coverage from tasks.")
+    process.exit(1)
+  }
+
+  run(["spec", "new", "bad-ears", "--title", "Bad Ears"], projectRoot)
+  fs.writeFileSync(
+    path.join(projectRoot, ".casa/specs/bad-ears/spec.md"),
+    `---\nslug: bad-ears\ntitle: Bad Ears\nphase: spec\nstatus: ready\nmode: greenfield\ncreated: 2026-06-21\n---\n\n# Spec: Bad Ears\n\n## Goal\n\nDemonstrate a non-EARS criterion.\n\n## Acceptance Criteria\n\n- AC1: the user can do things\n\n## Risks and Questions\n\n- None.\n`
+  )
+  run(["spec", "check", "bad-ears"], projectRoot, { shouldFail: true })
+  run(["spec", "plan", "bad-ears"], projectRoot, { shouldFail: true })
+
+  // R5: deterministic enforcement (deny-first settings + PreToolUse guard)
+  const claudeSettings = JSON.parse(fs.readFileSync(path.join(projectRoot, ".claude/settings.json"), "utf8"))
+  const denyList = claudeSettings.permissions?.deny || []
+  if (!denyList.includes("Edit(.casa/kernel/policies/**)") || !denyList.includes("Read(.env)")) {
+    console.error(".claude/settings.json must deny edits to protected paths and reads of secrets.")
+    process.exit(1)
+  }
+  if (!JSON.stringify(claudeSettings.hooks || {}).includes("protected-path-guard.mjs")) {
+    console.error(".claude/settings.json must wire the PreToolUse protected-path guard.")
+    process.exit(1)
+  }
+
+  const guardPath = path.join(projectRoot, ".casa/governance/hooks/protected-path-guard.mjs")
+  assertExists(guardPath)
+
+  const guardBlocked = spawnSync(process.execPath, [guardPath], {
+    cwd: projectRoot,
+    encoding: "utf8",
+    input: JSON.stringify({ tool_name: "Edit", tool_input: { file_path: ".casa/kernel/policies/secure-coding.md" } })
+  })
+  if (guardBlocked.status !== 2) {
+    console.error("protected-path guard must block edits to protected paths with exit code 2.")
+    process.exit(1)
+  }
+
+  const guardAllowed = spawnSync(process.execPath, [guardPath], {
+    cwd: projectRoot,
+    encoding: "utf8",
+    input: JSON.stringify({ tool_name: "Edit", tool_input: { file_path: "src/app.ts" } })
+  })
+  if (guardAllowed.status !== 0) {
+    console.error("protected-path guard must allow edits to non-protected paths.")
+    process.exit(1)
+  }
+
   const stackList = run(["stack", "list"], projectRoot)
   if (!stackList.stdout.includes("frontend:react-app") || !stackList.stdout.includes("ai:openrouter")) {
     console.error("Stack list must include core stack packs.")

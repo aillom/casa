@@ -1,3 +1,12 @@
+---
+id: security-scan
+detect: security-scan
+when:
+  - "**/package.json"
+  - "**/*.{ts,tsx,js,jsx}"
+optional: true
+---
+
 # Sensor: security scan
 
 ## Purpose
@@ -6,7 +15,8 @@ Detect dependency, secret, IaC and container risks.
 
 ## Command
 
-Use the configured security workflow, CodeQL, dependency review, secret scan or container scan for the repository.
+Auto-detected by `casa verify`: a dependency audit (`npm/pnpm/yarn audit --audit-level=high`)
+for Node projects. Set `command:` to wire CodeQL, secret scanning or container scanning.
 
 ## Required when
 
@@ -15,4 +25,4 @@ Use the configured security workflow, CodeQL, dependency review, secret scan or 
 
 ## Evidence
 
-Record the command and result in the PR or final response.
+`casa verify --sensors security-scan` records the command and exit code in the harness ledger.

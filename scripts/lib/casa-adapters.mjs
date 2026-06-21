@@ -254,6 +254,79 @@ Use security review before implementation and before final response.
 `
 }
 
+function generateClaudeSettings() {
+  const protectedPaths = readProtectedPaths()
+  const deny = [
+    "Read(.env)",
+    "Read(.env.*)",
+    "Read(**/*.pem)",
+    "Read(**/*.key)",
+    "Read(**/secrets/**)",
+    ...protectedPaths.flatMap((glob) => [`Edit(${glob})`, `Write(${glob})`])
+  ]
+
+  const settings = {
+    permissions: { deny },
+    hooks: {
+      PreToolUse: [
+        {
+          matcher: "Edit|Write|MultiEdit|NotebookEdit",
+          hooks: [
+            {
+              type: "command",
+              command: "node .casa/governance/hooks/protected-path-guard.mjs"
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  return `${JSON.stringify(settings, null, 2)}\n`
+}
+
+function agentsMd() {
+  const principles = readManifestList("principles")
+  const protectedPaths = readProtectedPaths()
+
+  return `${generatedHeader}# AGENTS.md
+
+This repository follows C.A.S.A - Context, Architecture, Stack & Automation.
+
+## Core principles
+
+${bulletList(principles)}
+
+## Before coding
+
+1. Read \`casa.manifest.yaml\`.
+2. Read the relevant spec in \`.casa/specs\`.
+3. Read the relevant policy in \`.casa/kernel/policies\`.
+4. Use existing examples before creating new patterns.
+5. Do not edit generated adapter files directly.
+6. Update tests, docs and examples when behavior changes.
+
+## Source of truth
+
+- \`.casa/kernel\` is authoritative.
+- \`.casa/generated\` is generated.
+- \`.casa/adapters\` contains adapter templates.
+- \`.casa/capabilities\` contains skills, subagents and workflows.
+- \`.casa/context\` contains maps and discovery outputs.
+- \`.casa/modernization\` contains brownfield and legacy modernization playbooks.
+
+## Protected paths
+
+These paths require extra review per \`casa.manifest.yaml\`:
+
+${bulletList(protectedPaths)}
+
+## Rule
+
+Edit the C.A.S.A Core, generate agent-specific files, and do not duplicate instructions manually.
+`
+}
+
 function adapterPack(adapterName, title, skills) {
   return `${generatedHeader}# ${title}
 
@@ -291,8 +364,18 @@ export function buildAdapterFiles() {
 
   files.push(
     {
+      targetPath: "AGENTS.md",
+      sourcePaths: ["casa.manifest.yaml"],
+      content: agentsMd()
+    },
+    {
+      targetPath: ".claude/settings.json",
+      sourcePaths: ["casa.manifest.yaml"],
+      content: generateClaudeSettings()
+    },
+    {
       targetPath: ".cursor/rules/00-casa-context.mdc",
-      sourcePaths: ["casa.manifest.yaml", "AGENTS.md"],
+      sourcePaths: ["casa.manifest.yaml"],
       content: cursorContextRule()
     },
     {
@@ -307,12 +390,12 @@ export function buildAdapterFiles() {
     },
     {
       targetPath: ".agents/casa-agent-guide.md",
-      sourcePaths: ["AGENTS.md", "casa.manifest.yaml"],
+      sourcePaths: ["casa.manifest.yaml"],
       content: genericAgentGuide()
     },
     {
       targetPath: ".casa/generated/adapters/generic/AGENT-GUIDE.md",
-      sourcePaths: ["AGENTS.md", "casa.manifest.yaml"],
+      sourcePaths: ["casa.manifest.yaml"],
       content: genericAgentGuide()
     },
     {
