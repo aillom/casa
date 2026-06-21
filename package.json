@@ -1,6 +1,6 @@
 {
   "name": "@aillomai/casa",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "C.A.S.A — AI coding agent harness and engineering control plane",
   "license": "Apache-2.0",
   "type": "module",
@@ -30,7 +30,8 @@
     "cli"
   ],
   "bin": {
-    "casa": "scripts/casa.mjs"
+    "casa": "scripts/casa.mjs",
+    "casa-mcp": "scripts/casa-mcp.mjs"
   },
   "files": [
     "AGENTS.md",

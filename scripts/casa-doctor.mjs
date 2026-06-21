@@ -2,6 +2,7 @@ import fs from "node:fs"
 import { buildAdapterFiles, findAdapterDrift } from "./lib/casa-adapters.mjs"
 import { loadSensors } from "./lib/casa-verify.mjs"
 import { auditWorkUnits } from "./lib/casa-loop.mjs"
+import { auditMissions } from "./lib/casa-mission.mjs"
 
 function isCasaPackageRepo() {
   if (!exists("package.json")) {
@@ -355,6 +356,19 @@ function assertWorkUnits() {
   pass("Spec work units are consistent")
 }
 
+function assertMissions() {
+  const failures = auditMissions({ cwd: process.cwd() })
+
+  if (failures.length > 0) {
+    for (const message of failures) {
+      fail(message)
+    }
+    return
+  }
+
+  pass("Missions are consistent")
+}
+
 function assertStackCatalog() {
   if (!exists(".casa/registry/stacks.json")) {
     fail("Missing stack catalog")
@@ -673,6 +687,7 @@ assertAgentsFile()
 assertSkills()
 assertSpecs()
 assertWorkUnits()
+assertMissions()
 assertStackCatalog()
 assertRecipeCatalog()
 assertSkillMarketplace()

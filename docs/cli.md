@@ -276,9 +276,37 @@ The generated config uses:
 - API key env var: `OPENROUTER_API_KEY`
 - model env var: `OPENROUTER_MODEL`
 
-### `casa mission new <slug>`
+### `casa mission`
 
-Creates a mission record in `.casa/runtime/missions` from `.casa/mission-control/mission-template.md`.
+Creates and drives missions as a runtime state machine over
+`.casa/runtime/missions/<id>.md` (status tracked in frontmatter).
+
+```bash
+./casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
+./casa mission start invoice-dashboard      # planned -> active
+./casa mission advance invoice-dashboard    # active -> review
+./casa mission evidence invoice-dashboard --note "validated" --verify
+./casa mission close invoice-dashboard      # review -> done (requires evidence)
+./casa mission status invoice-dashboard
+./casa mission list
+```
+
+`mission evidence` appends to a per-mission ledger
+(`.casa/runtime/missions/<id>.evidence.jsonl`) with a timestamp, the current status, a policy
+hash, and (with `--verify`) `casa verify` gate results. `mission close` refuses to finish until
+at least one evidence entry exists.
+
+### `casa-mcp` (MCP server)
+
+A zero-dependency MCP stdio server that exposes the C.A.S.A control plane to MCP-aware agents
+over JSON-RPC. See [docs/agent-ide-examples.md](agent-ide-examples.md) and
+`.casa/protocols/mcp` for resource, tool and prompt details.
+
+```bash
+casa-mcp
+# or
+node scripts/casa-mcp.mjs
+```
 
 ### `casa capsule list`
 

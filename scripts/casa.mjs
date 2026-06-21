@@ -61,6 +61,15 @@ import {
   listWorkUnits,
   workUnitStatus
 } from "./lib/casa-loop.mjs"
+import {
+  createMission,
+  listMissions,
+  readEvidence,
+  readMission,
+  recordEvidence,
+  resolveMissionId,
+  transitionMission
+} from "./lib/casa-mission.mjs"
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url))
 const packageRoot = path.resolve(scriptDir, "..")
@@ -105,7 +114,11 @@ Usage:
   casa skill update <skill-name> [--allow-risk]
   casa skill remove <skill-name> [--no-generate]
   casa ai configure openrouter [--model model] [--api-key-env OPENROUTER_API_KEY]
-  casa mission new <slug> [--title "Title"] [--mode greenfield|brownfield|hybrid]
+  casa mission new <slug> [--title "Title"] [--mode greenfield|brownfield|hybrid] [--spec slug]
+  casa mission start|advance|close <id>
+  casa mission evidence <id> [--note "..."] [--verify] [--strict]
+  casa mission status <id>
+  casa mission list
   casa capsule list
   casa gate list
 
@@ -125,7 +138,7 @@ Commands:
   history            Inspect local harness history.
   skill               List or create C.A.S.A skills and regenerate adapters.
   ai configure        Generate safe provider config without storing raw secrets.
-  mission new         Create a mission file from the mission template.
+  mission             Create and drive missions: new, start, advance, close, evidence, status, list.
   capsule list        List available context capsules.
   gate list           List available quality gates.
 `)
@@ -523,43 +536,114 @@ function createInit(args) {
   console.log("  ./casa commands")
 }
 
-function createMission(args) {
-  const slug = ensureSafeSlug(args[0] ?? "")
-  const title = parseOption(args, "--title", slug.replace(/-/g, " "))
-  const mode = parseOption(args, "--mode", "greenfield")
-  const validModes = new Set(["greenfield", "brownfield", "hybrid"])
+function printMissionRow(mission) {
+  console.log(`${mission.id}\t${mission.status}\t${mission.evidence} evidence\t${mission.title}`)
+}
 
-  if (!validModes.has(mode)) {
-    console.error("Invalid mission mode. Use greenfield, brownfield or hybrid.")
+function requireMissionId(idArg) {
+  if (!idArg) {
+    console.error("Mission id is required.")
     process.exit(1)
   }
-
-  const templatePath = ".casa/mission-control/mission-template.md"
-  if (!fs.existsSync(templatePath)) {
-    console.error(`Missing mission template: ${templatePath}`)
+  const id = resolveMissionId(process.cwd(), idArg)
+  if (!id) {
+    console.error(`Mission not found: ${idArg}`)
     process.exit(1)
   }
+  return id
+}
 
-  const missionId = `${today()}-${slug}`
-  const targetDir = ".casa/runtime/missions"
-  const targetPath = path.join(targetDir, `${missionId}.md`)
-
-  fs.mkdirSync(targetDir, { recursive: true })
-
-  if (fs.existsSync(targetPath)) {
-    console.error(`Mission already exists: ${targetPath}`)
-    process.exit(1)
+function createMissionCommand(action, args) {
+  if (!action || action === "list") {
+    const missions = listMissions({ cwd: process.cwd() })
+    if (missions.length === 0) {
+      console.log("No missions found. Create one with: casa mission new <slug>")
+      return
+    }
+    console.log("id\tstatus\tevidence\ttitle")
+    for (const mission of missions) {
+      printMissionRow(mission)
+    }
+    return
   }
 
-  const content = fs
-    .readFileSync(templatePath, "utf8")
-    .replace("- ID:", `- ID: ${missionId}`)
-    .replace("- Title:", `- Title: ${title}`)
-    .replace("- Mode: greenfield | brownfield | hybrid", `- Mode: ${mode}`)
-    .replace("- Status: proposed | planned | active | blocked | review | done", "- Status: planned")
+  if (action === "new") {
+    const slug = ensureSafeSlug(positionalArgs(args, new Set(["--title", "--mode", "--spec"]))[0] ?? "")
+    const mode = parseOption(args, "--mode", "greenfield")
+    if (!new Set(["greenfield", "brownfield", "hybrid"]).has(mode)) {
+      console.error("Invalid mission mode. Use greenfield, brownfield or hybrid.")
+      process.exit(1)
+    }
+    try {
+      const mission = createMission({
+        cwd: process.cwd(),
+        slug,
+        title: parseOption(args, "--title", ""),
+        mode,
+        spec: parseOption(args, "--spec", "")
+      })
+      console.log(`Created mission: ${path.relative(process.cwd(), mission.filePath)}`)
+      console.log(`Next: casa mission start ${mission.id}`)
+      appendHarnessHistory({ cwd: process.cwd(), action: "mission.new", subject: mission.id, details: { mode } })
+    } catch (error) {
+      console.error(error.message)
+      process.exit(1)
+    }
+    return
+  }
 
-  fs.writeFileSync(targetPath, content)
-  console.log(`Created mission: ${targetPath}`)
+  if (["start", "advance", "close"].includes(action)) {
+    const id = requireMissionId(positionalArgs(args)[0])
+    try {
+      const result = transitionMission({ cwd: process.cwd(), id, action })
+      console.log(`Mission ${id} -> ${result.status}`)
+      appendHarnessHistory({ cwd: process.cwd(), action: `mission.${action}`, subject: id, details: { status: result.status } })
+    } catch (error) {
+      console.error(error.message)
+      process.exit(1)
+    }
+    return
+  }
+
+  if (action === "evidence") {
+    const id = requireMissionId(positionalArgs(args, new Set(["--note"]))[0])
+    try {
+      const entry = recordEvidence({
+        cwd: process.cwd(),
+        id,
+        note: parseOption(args, "--note", ""),
+        verify: hasFlag(args, "--verify"),
+        strict: hasFlag(args, "--strict")
+      })
+      console.log(`Recorded evidence for ${id} (policyHash ${entry.policyHash})`)
+      if (entry.gateSummary) {
+        console.log(`Gates: ${entry.gateSummary.passed} passed, ${entry.gateSummary.failed} failed, ${entry.gateSummary.skipped} skipped`)
+      }
+      appendHarnessHistory({ cwd: process.cwd(), action: "mission.evidence", subject: id, details: { verify: hasFlag(args, "--verify") } })
+    } catch (error) {
+      console.error(error.message)
+      process.exit(1)
+    }
+    return
+  }
+
+  if (action === "status") {
+    const id = requireMissionId(positionalArgs(args)[0])
+    const mission = readMission(process.cwd(), id)
+    const evidence = readEvidence(process.cwd(), id)
+    console.log(`id: ${id}`)
+    console.log(`status: ${mission.status}`)
+    console.log(`title: ${mission.title}`)
+    console.log(`evidence entries: ${evidence.length}`)
+    for (const entry of evidence) {
+      const gates = entry.gateSummary ? ` [gates ${entry.gateSummary.failed} failed]` : ""
+      console.log(`  - ${entry.timestamp} ${entry.type}${entry.note ? `: ${entry.note}` : ""}${gates}`)
+    }
+    return
+  }
+
+  console.error(`Unknown mission command: ${action}`)
+  process.exit(1)
 }
 
 function listMarkdownDirectory(rootDir, label) {
@@ -1732,8 +1816,8 @@ if (command === "ai") {
   process.exit(0)
 }
 
-if (command === "mission" && subcommand === "new") {
-  createMission(rest)
+if (command === "mission") {
+  createMissionCommand(subcommand, rest)
   process.exit(0)
 }
 

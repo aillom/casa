@@ -102,7 +102,7 @@
       "sourcePaths": [
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
+      "sourceSha256": "94115af644193010d4c59bb4e67c2d7e11f64554c14d4bc2018600ee17529bbd",
       "targetSha256": "a23dfb382486fa873fb9a82aa65260589ec58f810401bd267fb78c5ab34a0a19"
     },
     {
@@ -110,7 +110,7 @@
       "sourcePaths": [
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
+      "sourceSha256": "94115af644193010d4c59bb4e67c2d7e11f64554c14d4bc2018600ee17529bbd",
       "targetSha256": "db2544717b51513e212106a4b3e1f463fc7a338efe557878caab0e9cdfbca56c"
     },
     {
@@ -118,7 +118,7 @@
       "sourcePaths": [
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
+      "sourceSha256": "94115af644193010d4c59bb4e67c2d7e11f64554c14d4bc2018600ee17529bbd",
       "targetSha256": "f9867e6cab898da99e694d65644af7a1ef193a75913c42b46b08652c7901f08a"
     },
     {
@@ -127,7 +127,7 @@
         "casa.manifest.yaml",
         ".casa/kernel/policies/secure-coding.md"
       ],
-      "sourceSha256": "22d323a336f50a3d2240a3c387c247021651aa557df33cdf5e654cbb28d347d5",
+      "sourceSha256": "bfb75137dd62d36733bc7782da6ca4bed87b86e22ced543a29fa08cf43c6f318",
       "targetSha256": "cda837874c43feec1ec55ea4617bd6d9d102e204275315f05560258849dd59b9"
     },
     {
@@ -136,7 +136,7 @@
         "casa.manifest.yaml",
         ".casa/capabilities/workflows/modernize-legacy-module.workflow.md"
       ],
-      "sourceSha256": "4d0f12880ad852bcc31fb5fcae17e4ba942c08b4e50a0923493924bbc8b59973",
+      "sourceSha256": "89a8ed56988f7d5058f85d2918c5881a85874b120f0d983e7a42818a6db2f1c3",
       "targetSha256": "f681433b09b9626b92850b32699810784fdfe03c7aff1d767b950b3eab200357"
     },
     {
@@ -144,7 +144,7 @@
       "sourcePaths": [
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
+      "sourceSha256": "94115af644193010d4c59bb4e67c2d7e11f64554c14d4bc2018600ee17529bbd",
       "targetSha256": "7962bdf23949cc0c16b1a0249c13afef7affd788b177a5c336ddf8e6df7535ba"
     },
     {
@@ -152,7 +152,7 @@
       "sourcePaths": [
         "casa.manifest.yaml"
       ],
-      "sourceSha256": "0126f19bc43ba7e6a419ba3fd56a472e50bb8e71b057463ca109c41fbb16a20a",
+      "sourceSha256": "94115af644193010d4c59bb4e67c2d7e11f64554c14d4bc2018600ee17529bbd",
       "targetSha256": "7962bdf23949cc0c16b1a0249c13afef7affd788b177a5c336ddf8e6df7535ba"
     },
     {

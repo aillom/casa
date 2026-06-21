@@ -315,8 +315,60 @@ try {
     process.exit(1)
   }
 
+  // R6: mission runtime state machine + evidence ledger
+  const missionId = `${new Date().toISOString().slice(0, 10)}-invoice-dashboard`
   run(["mission", "new", "invoice-dashboard", "--title", "Invoice Dashboard", "--mode", "greenfield"], projectRoot)
-  assertExists(path.join(projectRoot, `.casa/runtime/missions/${new Date().toISOString().slice(0, 10)}-invoice-dashboard.md`))
+  assertExists(path.join(projectRoot, `.casa/runtime/missions/${missionId}.md`))
+
+  run(["mission", "close", "invoice-dashboard"], projectRoot, { shouldFail: true })
+  run(["mission", "start", "invoice-dashboard"], projectRoot)
+  run(["mission", "advance", "invoice-dashboard"], projectRoot)
+  run(["mission", "close", "invoice-dashboard"], projectRoot, { shouldFail: true })
+
+  const missionEvidence = run(["mission", "evidence", "invoice-dashboard", "--note", "verified locally", "--verify"], projectRoot)
+  if (!missionEvidence.stdout.includes("policyHash")) {
+    console.error("casa mission evidence must record a policy hash.")
+    process.exit(1)
+  }
+  assertExists(path.join(projectRoot, `.casa/runtime/missions/${missionId}.evidence.jsonl`))
+
+  run(["mission", "close", "invoice-dashboard"], projectRoot)
+  const missionStatusOut = run(["mission", "status", "invoice-dashboard"], projectRoot)
+  if (!missionStatusOut.stdout.includes("status: done")) {
+    console.error("casa mission close must transition the mission to done after evidence.")
+    process.exit(1)
+  }
+
+  // R7: MCP stdio server
+  const mcpPath = path.join(scriptDir, "casa-mcp.mjs")
+  const mcpInput = [
+    JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2024-11-05" } }),
+    JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/list" }),
+    JSON.stringify({ jsonrpc: "2.0", id: 3, method: "resources/list" }),
+    JSON.stringify({ jsonrpc: "2.0", id: 4, method: "tools/call", params: { name: "casa_list_skills", arguments: {} } })
+  ].join("\n") + "\n"
+  const mcp = spawnSync(process.execPath, [mcpPath], { cwd: projectRoot, encoding: "utf8", input: mcpInput })
+  const mcpMessages = mcp.stdout.trim().split("\n").filter(Boolean).map((line) => JSON.parse(line))
+  const initResponse = mcpMessages.find((message) => message.id === 1)
+  if (!initResponse || initResponse.result?.serverInfo?.name !== "casa-mcp") {
+    console.error("casa-mcp must answer initialize with serverInfo.name casa-mcp.")
+    process.exit(1)
+  }
+  const toolsResponse = mcpMessages.find((message) => message.id === 2)
+  if (!toolsResponse || !toolsResponse.result.tools.some((tool) => tool.name === "casa_list_skills")) {
+    console.error("casa-mcp tools/list must include casa_list_skills.")
+    process.exit(1)
+  }
+  const resourcesResponse = mcpMessages.find((message) => message.id === 3)
+  if (!resourcesResponse || !resourcesResponse.result.resources.some((resource) => resource.uri === "casa://manifest")) {
+    console.error("casa-mcp resources/list must include casa://manifest.")
+    process.exit(1)
+  }
+  const callResponse = mcpMessages.find((message) => message.id === 4)
+  if (!callResponse || !callResponse.result.content?.[0]?.text?.includes("casa-skill-router")) {
+    console.error("casa-mcp tools/call casa_list_skills must return the skill list.")
+    process.exit(1)
+  }
 
   run(["init", projectRoot], tempRoot, { shouldFail: true })
 

@@ -2,6 +2,13 @@
 
 All notable changes to C.A.S.A will be documented in this file.
 
+## 0.3.0
+
+- Turn missions into a runtime state machine: `casa mission new|start|advance|close|evidence|status|list` with validated transitions (planned -> active -> review -> done) and frontmatter-tracked status.
+- Add a real evidence ledger per mission (`.casa/runtime/missions/<id>.evidence.jsonl`) capturing timestamp, status, policy hash and optional `casa verify` gate results; `close` requires recorded evidence.
+- Ship a zero-dependency MCP stdio server (`scripts/casa-mcp.mjs`, `casa-mcp` bin) exposing C.A.S.A capsules, gates, policies and repo maps as Resources, read-only Tools plus `casa_verify`, and spec/mission templates as Prompts.
+- Extend `casa doctor` to validate mission consistency, and document the MCP server in `.casa/protocols/mcp`.
+
 ## 0.2.0
 
 - Generate `AGENTS.md` from the C.A.S.A core (principles and protected paths) as a first-class, drift-checked adapter output instead of a hand-maintained file.

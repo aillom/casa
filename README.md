@@ -115,7 +115,7 @@ C.A.S.A is designed to work across IDEs and coding agents instead of locking a p
 | Continue | `.continue/rules/*.md` |
 | Generic CLI agents | `AGENT-GUIDE.md` |
 | Generic web chat | `casa-system-prompt.md` |
-| MCP-aware agents | `context-card.md` |
+| MCP-aware agents | `casa-mcp` stdio server, `context-card.md` |
 
 Start with [docs/agent-ide-examples.md](docs/agent-ide-examples.md) and [examples/ide-adapters](examples/ide-adapters).
 

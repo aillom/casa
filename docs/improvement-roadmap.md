@@ -43,12 +43,17 @@ AND into deterministic enforcement that works with any agent.*
   them as `(AC1)`. `casa spec check` validates EARS grammar, unique ids and task coverage; the
   spec gate blocks `plan` on non-EARS criteria. See `scripts/lib/casa-loop.mjs`.
 
+- **R6 - Missions as runtime state machine + evidence ledger.** `casa mission start|advance|
+  close|evidence|status|list` with validated transitions and a per-mission evidence ledger
+  (`.casa/runtime/missions/<id>.evidence.jsonl`) capturing status, policy hash and gate
+  results; `close` requires evidence. See `scripts/lib/casa-mission.mjs`.
+- **R7 - MCP server.** Zero-dependency stdio JSON-RPC server (`scripts/casa-mcp.mjs`,
+  `casa-mcp` bin) exposing capsules, gates, policies and repo maps as Resources, read-only
+  Tools plus `casa_verify`, and spec/mission templates as Prompts.
+
 ## Next - prioritized
 
 ### Medium term
-- **R6 - Missions as runtime state machine + evidence ledger.** `mission start/advance/
-  evidence/close` transitions, with structured evidence (prompt, model+version, policy hash,
-  tool calls, gate results, risk tier, approval, rollback ref). Grounded in OWASP MCP08.
 - **R8 - Mechanical risk gate with segregation of duties.** Map action/path to a risk tier
   and select an oversight mode; prevent the same agent proposing and approving a change.
 - **R10 - Real brownfield discovery.** Make `init --mode brownfield` scan the target repo to
