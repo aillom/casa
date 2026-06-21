@@ -78,7 +78,8 @@ const requiredCorePaths = [
   ".agents/casa-agent-guide.md",
   ".codex/skills/casa-skill-router/SKILL.md",
   ".cursor/rules/00-casa-context.mdc",
-  ".claude/settings.json"
+  ".claude/settings.json",
+  ".claude/agents/security-reviewer.md"
 ]
 
 const requiredPackagePaths = [
@@ -103,6 +104,8 @@ const requiredPackagePaths = [
   "scripts/lib/casa-verify.mjs",
   "scripts/lib/casa-loop.mjs",
   "scripts/lib/casa-mission.mjs",
+  "scripts/lib/casa-repomap.mjs",
+  "scripts/lib/casa-risk.mjs",
   "scripts/casa-doctor.mjs",
   "scripts/generate-adapters.mjs",
   "scripts/test-cli.mjs",

@@ -3,6 +3,7 @@ import { buildAdapterFiles, findAdapterDrift } from "./lib/casa-adapters.mjs"
 import { loadSensors } from "./lib/casa-verify.mjs"
 import { auditWorkUnits } from "./lib/casa-loop.mjs"
 import { auditMissions } from "./lib/casa-mission.mjs"
+import { repoMapFreshness } from "./lib/casa-repomap.mjs"
 
 function isCasaPackageRepo() {
   if (!exists("package.json")) {
@@ -541,6 +542,17 @@ function assertContextMaps() {
   }
 }
 
+function assertContextFreshness() {
+  const freshness = repoMapFreshness({ cwd: process.cwd() })
+  if (freshness.state === "stale") {
+    warn("Compiled repo map is stale; run `casa context build`")
+    return
+  }
+  if (freshness.state === "fresh") {
+    pass("Compiled repo map is fresh")
+  }
+}
+
 function assertSensors() {
   let localFailures = 0
   const requiredIds = ["lint", "typecheck", "test", "security-scan"]
@@ -694,6 +706,7 @@ assertSkillMarketplace()
 assertPolicies()
 assertGeneratedAdapters()
 assertContextMaps()
+assertContextFreshness()
 assertSensors()
 assertClaudeEnforcement()
 assertControlPlaneBlocks()

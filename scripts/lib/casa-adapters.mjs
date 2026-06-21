@@ -69,6 +69,50 @@ function listWorkflowFiles() {
     .sort((a, b) => a.name.localeCompare(b.name))
 }
 
+const subagentRoot = ".casa/capabilities/subagents"
+const readOnlyAgents = new Set(["security-reviewer", "legacy-archaeologist", "casa-skill-router"])
+
+function listSubagentFiles() {
+  if (!fs.existsSync(subagentRoot)) {
+    return []
+  }
+  return fs
+    .readdirSync(subagentRoot, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".agent.md"))
+    .map((entry) => {
+      const sourcePath = path.join(subagentRoot, entry.name)
+      return { name: entry.name.replace(/\.agent\.md$/, ""), sourcePath, content: readText(sourcePath).trimEnd() }
+    })
+    .sort((a, b) => a.name.localeCompare(b.name))
+}
+
+function stripFrontmatter(content) {
+  const match = content.match(/^---\n[\s\S]*?\n---\n?/)
+  return match ? content.slice(match[0].length).replace(/^\n+/, "") : content
+}
+
+function frontmatterField(content, field) {
+  const match = content.match(new RegExp(`^${field}:\\s*(.+)$`, "m"))
+  return match ? match[1].trim() : ""
+}
+
+function agentTools(name) {
+  return readOnlyAgents.has(name) ? "Read, Grep, Glob" : "Read, Grep, Glob, Edit, Write, Bash"
+}
+
+function claudeAgentDoc({ name, description, tools, sourcePath, content }) {
+  return `---
+name: ${name}
+description: ${description}
+tools: ${tools}
+---
+
+${generatedHeader}Source: \`${sourcePath}\`
+
+${stripFrontmatter(content)}
+`
+}
+
 function readManifestList(listName, indent = 0) {
   const manifest = readText("casa.manifest.yaml").split("\n")
   const key = `${" ".repeat(indent)}${listName}:`
@@ -424,6 +468,33 @@ export function buildAdapterFiles() {
       content: generatedSkillIndex(skills)
     }
   )
+
+  const agentDocs = new Map()
+  for (const skill of skills) {
+    agentDocs.set(skill.name, {
+      name: skill.name,
+      sourcePath: skill.sourcePath,
+      description: frontmatterField(skill.content, "description") || `Use the ${skill.name} capability.`,
+      tools: agentTools(skill.name),
+      content: skill.content
+    })
+  }
+  for (const subagent of listSubagentFiles()) {
+    agentDocs.set(subagent.name, {
+      name: subagent.name,
+      sourcePath: subagent.sourcePath,
+      description: frontmatterField(subagent.content, "description") || `Use the ${subagent.name} subagent.`,
+      tools: agentTools(subagent.name),
+      content: subagent.content
+    })
+  }
+  for (const agent of [...agentDocs.values()].sort((a, b) => a.name.localeCompare(b.name))) {
+    files.push({
+      targetPath: `.claude/agents/${agent.name}.md`,
+      sourcePaths: [agent.sourcePath],
+      content: claudeAgentDoc(agent)
+    })
+  }
 
   const manifestItems = files.map((file) => ({
     targetPath: file.targetPath,

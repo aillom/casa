@@ -208,6 +208,20 @@ try {
   run(["spec", "check", "bad-ears"], projectRoot, { shouldFail: true })
   run(["spec", "plan", "bad-ears"], projectRoot, { shouldFail: true })
 
+  // R14: behavior delta (ADDED/MODIFIED/REMOVED) for modernization
+  run(["spec", "delta", "demo-feature"], projectRoot)
+  assertExists(path.join(demoDir, "delta.md"))
+  const deltaCheck = run(["spec", "check", "demo-feature"], projectRoot)
+  if (!deltaCheck.stdout.includes("delta:")) {
+    console.error("casa spec check must report the behavior delta when delta.md exists.")
+    process.exit(1)
+  }
+  fs.writeFileSync(
+    path.join(demoDir, "delta.md"),
+    `---\nslug: demo-feature\nphase: delta\nstatus: ready\n---\n\n# Behavior Delta\n\n## ADDED\n\n- AD1: WHEN x THE SYSTEM SHALL y\n`
+  )
+  run(["spec", "check", "demo-feature"], projectRoot, { shouldFail: true })
+
   // R5: deterministic enforcement (deny-first settings + PreToolUse guard)
   const claudeSettings = JSON.parse(fs.readFileSync(path.join(projectRoot, ".claude/settings.json"), "utf8"))
   const denyList = claudeSettings.permissions?.deny || []
@@ -240,6 +254,18 @@ try {
   })
   if (guardAllowed.status !== 0) {
     console.error("protected-path guard must allow edits to non-protected paths.")
+    process.exit(1)
+  }
+
+  // R12: compiled Claude subagents with least-privilege tools
+  const reviewerAgent = fs.readFileSync(path.join(projectRoot, ".claude/agents/security-reviewer.md"), "utf8")
+  if (!reviewerAgent.includes("name: security-reviewer") || !reviewerAgent.includes("tools: Read, Grep, Glob\n")) {
+    console.error(".claude/agents must be generated with least-privilege tools for read-only capabilities.")
+    process.exit(1)
+  }
+  const builderAgent = fs.readFileSync(path.join(projectRoot, ".claude/agents/backend-clean-architect.md"), "utf8")
+  if (!builderAgent.includes("tools: Read, Grep, Glob, Edit, Write, Bash")) {
+    console.error(".claude/agents must grant edit tools to implementation capabilities.")
     process.exit(1)
   }
 
@@ -378,6 +404,39 @@ try {
   assertExists(path.join(adapterProjectRoot, ".claude/settings.json"))
   assertExists(path.join(adapterProjectRoot, ".github/copilot-instructions.md"))
   assertExists(path.join(adapterProjectRoot, "kilo.jsonc"))
+
+  // R9/R10/R11: brownfield discovery, compiled repo map, freshness
+  const brownRoot = path.join(tempRoot, "brown-app")
+  fs.mkdirSync(path.join(brownRoot, "src"), { recursive: true })
+  fs.writeFileSync(path.join(brownRoot, "src/util.ts"), "export function add(a, b) { return a + b }\nexport class Calc {}\n")
+  fs.writeFileSync(path.join(brownRoot, "src/index.ts"), 'import { add } from "./util"\nexport function main() { return add(1, 2) }\n')
+  run(["init", brownRoot, "--mode", "brownfield"], tempRoot)
+  const brownModules = fs.readFileSync(path.join(brownRoot, ".casa/context/repo-map/modules.md"), "utf8")
+  if (!brownModules.includes("src/util.ts") || !brownModules.includes("add")) {
+    console.error("brownfield discovery must compile a real repo map from source.")
+    process.exit(1)
+  }
+  assertExists(path.join(brownRoot, ".casa/context/code-intelligence/symbols.index.json"))
+  run(["context", "check"], brownRoot)
+  fs.appendFileSync(path.join(brownRoot, "src/util.ts"), "export const extra = 1\n")
+  run(["context", "check"], brownRoot, { shouldFail: true })
+  run(["context", "build"], brownRoot)
+  run(["context", "check"], brownRoot)
+
+  // R8: risk tiers + segregation of duties
+  const riskAssess = run(["risk", "assess", ".casa/kernel/policies/secure-coding.md", "src/app.ts"], brownRoot)
+  if (!riskAssess.stdout.includes("CRITICAL") || !riskAssess.stdout.includes("Highest tier: critical")) {
+    console.error("casa risk assess must classify protected and sensitive paths.")
+    process.exit(1)
+  }
+
+  run(["mission", "new", "secure-change", "--title", "Secure Change", "--risk", "high"], brownRoot)
+  run(["mission", "start", "secure-change"], brownRoot)
+  run(["mission", "advance", "secure-change"], brownRoot)
+  run(["mission", "evidence", "secure-change", "--note", "implemented", "--actor", "dev@example.com"], brownRoot)
+  run(["mission", "close", "secure-change"], brownRoot, { shouldFail: true })
+  run(["mission", "approve", "secure-change", "--actor", "reviewer@example.com"], brownRoot)
+  run(["mission", "close", "secure-change"], brownRoot)
 
   console.log("C.A.S.A CLI smoke tests passed.")
 } finally {

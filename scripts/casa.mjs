@@ -54,6 +54,7 @@ import {
 import { loadSensors, runSensors } from "./lib/casa-verify.mjs"
 import {
   checkWorkUnit,
+  createDelta,
   createPlan,
   createSpec,
   createTasks,
@@ -70,6 +71,8 @@ import {
   resolveMissionId,
   transitionMission
 } from "./lib/casa-mission.mjs"
+import { repoMapFreshness, writeLegacyInventory, writeRepoMap } from "./lib/casa-repomap.mjs"
+import { assessPath, highestTier, requiredOversight } from "./lib/casa-risk.mjs"
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url))
 const packageRoot = path.resolve(scriptDir, "..")
@@ -83,9 +86,12 @@ Usage:
   casa doctor
   casa check
   casa verify [--sensors id1,id2] [--changed] [--strict]
+  casa context build [--map-tokens N]
+  casa context check
   casa spec new <slug> [--title "Title"] [--mode greenfield|brownfield|hybrid]
   casa spec plan <slug>
   casa spec tasks <slug>
+  casa spec delta <slug>
   casa spec check <slug> [--strict]
   casa spec implement <slug> [--changed] [--strict]
   casa spec list
@@ -114,11 +120,13 @@ Usage:
   casa skill update <skill-name> [--allow-risk]
   casa skill remove <skill-name> [--no-generate]
   casa ai configure openrouter [--model model] [--api-key-env OPENROUTER_API_KEY]
-  casa mission new <slug> [--title "Title"] [--mode greenfield|brownfield|hybrid] [--spec slug]
+  casa mission new <slug> [--title "Title"] [--mode greenfield|brownfield|hybrid] [--risk low|medium|high|critical] [--spec slug]
   casa mission start|advance|close <id>
-  casa mission evidence <id> [--note "..."] [--verify] [--strict]
+  casa mission evidence <id> [--note "..."] [--verify] [--actor who]
+  casa mission approve <id> [--actor who] [--note "..."]
   casa mission status <id>
   casa mission list
+  casa risk assess <path...>
   casa capsule list
   casa gate list
 
@@ -128,6 +136,7 @@ Commands:
   doctor              Validate C.A.S.A structure and governance.
   check               Run structure check, adapter sync check and doctor.
   verify              Run governance sensors and block on failures by exit code.
+  context             Compile the repo map from real source (build) or check freshness (check).
   spec                Drive the spec -> plan -> tasks -> implement loop with gates.
   generate adapters   Generate agent-specific adapter outputs.
   compose             Ask stack questions and generate a stack plan, spec and optional AI config.
@@ -138,7 +147,8 @@ Commands:
   history            Inspect local harness history.
   skill               List or create C.A.S.A skills and regenerate adapters.
   ai configure        Generate safe provider config without storing raw secrets.
-  mission             Create and drive missions: new, start, advance, close, evidence, status, list.
+  mission             Create and drive missions: new, start, advance, close, evidence, approve, status, list.
+  risk                Assess the risk tier of one or more paths from the manifest model.
   capsule list        List available context capsules.
   gate list           List available quality gates.
 `)
@@ -460,7 +470,7 @@ npx @aillomai/casa check
 
 function adapterSources(adapterNames) {
   const adapterMap = new Map([
-    ["claude", [{ from: "examples/ide-adapters/claude/CLAUDE.md", to: "CLAUDE.md" }, { from: "examples/ide-adapters/claude/.claude/agents", to: ".claude/agents" }]],
+    ["claude", [{ from: "examples/ide-adapters/claude/CLAUDE.md", to: "CLAUDE.md" }]],
     ["devin", [{ from: "examples/ide-adapters/devin/knowledge", to: "knowledge" }]],
     ["github-copilot", [{ from: "examples/ide-adapters/github-copilot/.github", to: ".github" }]],
     ["copilot", [{ from: "examples/ide-adapters/github-copilot/.github", to: ".github" }]],
@@ -520,7 +530,7 @@ function createInit(args) {
     { from: ".agents", to: ".agents" },
     { from: ".codex", to: ".codex" },
     { from: ".cursor", to: ".cursor" },
-    { from: ".claude/settings.json", to: ".claude/settings.json" }
+    { from: ".claude", to: ".claude" }
   ]
   const sources = [...coreSources, ...adapterSources(adapters)]
   const plan = [...buildCopyPlan(sources, targetRoot), ...commandShortcutFiles(targetRoot)]
@@ -528,12 +538,52 @@ function createInit(args) {
   fs.mkdirSync(targetRoot, { recursive: true })
   writeCopyPlan(plan, force)
 
+  if (mode === "brownfield" || mode === "hybrid") {
+    const discovery = writeRepoMap({ cwd: targetRoot })
+    writeLegacyInventory({ cwd: targetRoot, map: discovery.map })
+    console.log(`Discovered ${discovery.map.fileCount} source file(s); wrote a real repo map and legacy inventory.`)
+  }
+
   console.log(`Installed C.A.S.A in ${path.relative(process.cwd(), targetRoot) || "."}`)
   console.log(`Mode: ${mode}`)
   console.log("Next:")
   console.log("  ./casa doctor")
   console.log("  ./casa mission new first-mission --title \"First Mission\"")
   console.log("  ./casa commands")
+}
+
+function resolveActor(args) {
+  const explicit = parseOption(args, "--actor", "")
+  if (explicit) {
+    return explicit
+  }
+  if (process.env.CASA_ACTOR) {
+    return process.env.CASA_ACTOR
+  }
+  const git = spawnSync("git", ["config", "user.email"], { cwd: process.cwd(), encoding: "utf8" })
+  const email = (git.stdout || "").trim()
+  return email || "unknown"
+}
+
+function createRiskCommand(action, args) {
+  if (action !== "assess") {
+    console.error("Usage: casa risk assess <path...>")
+    process.exit(1)
+  }
+
+  const paths = positionalArgs(args)
+  if (paths.length === 0) {
+    console.error("At least one path is required.")
+    process.exit(1)
+  }
+
+  const assessments = paths.map((filePath) => assessPath(process.cwd(), filePath))
+  for (const assessment of assessments) {
+    console.log(`  ${assessment.tier.toUpperCase().padEnd(8)} ${assessment.path} - ${assessment.reason}`)
+  }
+  const top = highestTier(assessments)
+  console.log(`Highest tier: ${top}`)
+  console.log(`Oversight: ${requiredOversight(top)}`)
 }
 
 function printMissionRow(mission) {
@@ -568,10 +618,15 @@ function createMissionCommand(action, args) {
   }
 
   if (action === "new") {
-    const slug = ensureSafeSlug(positionalArgs(args, new Set(["--title", "--mode", "--spec"]))[0] ?? "")
+    const slug = ensureSafeSlug(positionalArgs(args, new Set(["--title", "--mode", "--spec", "--risk"]))[0] ?? "")
     const mode = parseOption(args, "--mode", "greenfield")
     if (!new Set(["greenfield", "brownfield", "hybrid"]).has(mode)) {
       console.error("Invalid mission mode. Use greenfield, brownfield or hybrid.")
+      process.exit(1)
+    }
+    const risk = parseOption(args, "--risk", "low")
+    if (!new Set(["low", "medium", "high", "critical"]).has(risk)) {
+      console.error("Invalid risk. Use low, medium, high or critical.")
       process.exit(1)
     }
     try {
@@ -580,7 +635,8 @@ function createMissionCommand(action, args) {
         slug,
         title: parseOption(args, "--title", ""),
         mode,
-        spec: parseOption(args, "--spec", "")
+        spec: parseOption(args, "--spec", ""),
+        risk
       })
       console.log(`Created mission: ${path.relative(process.cwd(), mission.filePath)}`)
       console.log(`Next: casa mission start ${mission.id}`)
@@ -605,21 +661,24 @@ function createMissionCommand(action, args) {
     return
   }
 
-  if (action === "evidence") {
-    const id = requireMissionId(positionalArgs(args, new Set(["--note"]))[0])
+  if (action === "evidence" || action === "approve") {
+    const id = requireMissionId(positionalArgs(args, new Set(["--note", "--actor"]))[0])
+    const actor = resolveActor(args)
     try {
       const entry = recordEvidence({
         cwd: process.cwd(),
         id,
-        note: parseOption(args, "--note", ""),
+        type: action === "approve" ? "approval" : "note",
+        note: parseOption(args, "--note", action === "approve" ? "Approved" : ""),
         verify: hasFlag(args, "--verify"),
-        strict: hasFlag(args, "--strict")
+        strict: hasFlag(args, "--strict"),
+        actor
       })
-      console.log(`Recorded evidence for ${id} (policyHash ${entry.policyHash})`)
+      console.log(`Recorded ${entry.type} for ${id} by ${actor} (policyHash ${entry.policyHash})`)
       if (entry.gateSummary) {
         console.log(`Gates: ${entry.gateSummary.passed} passed, ${entry.gateSummary.failed} failed, ${entry.gateSummary.skipped} skipped`)
       }
-      appendHarnessHistory({ cwd: process.cwd(), action: "mission.evidence", subject: id, details: { verify: hasFlag(args, "--verify") } })
+      appendHarnessHistory({ cwd: process.cwd(), action: `mission.${action}`, subject: id, details: { actor, verify: hasFlag(args, "--verify") } })
     } catch (error) {
       console.error(error.message)
       process.exit(1)
@@ -1622,6 +1681,24 @@ function createSpecCommand(action, args) {
     return
   }
 
+  if (action === "delta") {
+    const slug = positionalArgs(args)[0]
+    if (!slug) {
+      console.error("Spec slug is required.")
+      process.exit(1)
+    }
+    try {
+      const result = createDelta({ cwd: process.cwd(), slug, force: hasFlag(args, "--force") })
+      console.log(`Created behavior delta: ${path.relative(process.cwd(), result.filePath)}`)
+      console.log(`Next: fill ADDED / MODIFIED / REMOVED, then run: casa spec check ${result.slug}`)
+      appendHarnessHistory({ cwd: process.cwd(), action: "spec.delta", subject: result.slug, details: { phase: "delta" } })
+    } catch (error) {
+      console.error(error.message)
+      process.exit(1)
+    }
+    return
+  }
+
   if (action === "check") {
     const slug = positionalArgs(args)[0]
     if (!slug) {
@@ -1633,6 +1710,9 @@ function createSpecCommand(action, args) {
     console.log(`Spec check: ${result.slug}`)
     for (const ac of result.criteria) {
       console.log(`  ${ac.id}: ${ac.ears ? "EARS" : "INVALID"}`)
+    }
+    if (result.delta) {
+      console.log(`  delta: ${result.delta.added} added, ${result.delta.modified} modified, ${result.delta.removed} removed`)
     }
     for (const entry of result.coverage) {
       console.log(`  ${entry.id}: ${entry.covered ? "covered by a task" : "no task"}`)
@@ -1688,6 +1768,42 @@ function createSpecCommand(action, args) {
   }
 
   console.error(`Unknown spec command: ${action}`)
+  process.exit(1)
+}
+
+function createContextCommand(action, args) {
+  if (action === "build") {
+    const parsed = Number.parseInt(parseOption(args, "--map-tokens", "50"), 10)
+    const mapTokens = Number.isFinite(parsed) && parsed > 0 ? parsed : 50
+    const result = writeRepoMap({ cwd: process.cwd(), mapTokens })
+    console.log(`Built repo map from ${result.map.fileCount} source file(s):`)
+    for (const output of result.outputs) {
+      console.log(`  ${output}`)
+    }
+    appendHarnessHistory({
+      cwd: process.cwd(),
+      action: "context.build",
+      subject: String(result.map.fileCount),
+      details: { files: result.map.fileCount, digest: result.digest }
+    })
+    return
+  }
+
+  if (action === "check") {
+    const freshness = repoMapFreshness({ cwd: process.cwd() })
+    if (freshness.state === "missing") {
+      console.log("No compiled repo map found. Run: casa context build")
+      return
+    }
+    if (freshness.state === "stale") {
+      console.error("Repo map is stale (source changed since last build). Run: casa context build")
+      process.exit(1)
+    }
+    console.log("Repo map is fresh.")
+    return
+  }
+
+  console.error(`Unknown context command: ${action}`)
   process.exit(1)
 }
 
@@ -1768,6 +1884,16 @@ if (command === "generate" && subcommand === "adapters") {
 
 if (command === "verify") {
   createVerifyCommand([subcommand, ...rest].filter(Boolean))
+  process.exit(0)
+}
+
+if (command === "context") {
+  createContextCommand(subcommand, rest)
+  process.exit(0)
+}
+
+if (command === "risk") {
+  createRiskCommand(subcommand, rest)
   process.exit(0)
 }
 

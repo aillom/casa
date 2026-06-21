@@ -50,33 +50,34 @@ AND into deterministic enforcement that works with any agent.*
 - **R7 - MCP server.** Zero-dependency stdio JSON-RPC server (`scripts/casa-mcp.mjs`,
   `casa-mcp` bin) exposing capsules, gates, policies and repo maps as Resources, read-only
   Tools plus `casa_verify`, and spec/mission templates as Prompts.
+- **R8 - Mechanical risk gate + segregation of duties.** `casa risk assess <path...>`
+  classifies paths into low/medium/high/critical; high/critical missions require an approval
+  from a different actor than the implementer before `close`. See `scripts/lib/casa-risk.mjs`.
+- **R9 - Compile the repo map from real code.** Zero-dependency scanner (`casa context build`)
+  extracts symbols and import edges, ranks by inbound imports, and emits `modules.md`,
+  `dependency-map.md` and code-intelligence JSON. See `scripts/lib/casa-repomap.mjs`.
+- **R10 - Real brownfield discovery.** `init --mode brownfield|hybrid` scans the target repo
+  and writes a real repo map and a heuristic legacy inventory.
+- **R11 - Context freshness.** `casa context check` and `doctor` detect when the compiled repo
+  map drifts from source (content hash in `repomap.lock.json`).
+- **R12 - Compiled Claude subagents.** Skills and subagents compile to `.claude/agents/*.md`
+  with least-privilege tool allowlists (read-only agents cannot edit).
+- **R14 - Behavior delta unit.** `casa spec delta <slug>` adds an OpenSpec-style
+  ADDED/MODIFIED/REMOVED change unit for modernization, validated by `casa spec check`.
+- **CI** runs `casa verify` so governance gates fail builds.
 
 ## Next - prioritized
 
 ### Medium term
-- **R8 - Mechanical risk gate with segregation of duties.** Map action/path to a risk tier
-  and select an oversight mode; prevent the same agent proposing and approving a change.
-- **R10 - Real brownfield discovery.** Make `init --mode brownfield` scan the target repo to
-  populate the repo-map and legacy inventory instead of copying placeholders.
-- **R12 - Compile skills + subagents to `.claude/agents/*.md`** with least-privilege
-  frontmatter (tools allowlist, model, permissionMode). The one existing subagent is never
-  compiled today.
-- **R15 - Harden supply chain + CI** (allowlist/provenance for skills; SHA-pin GitHub
-  Actions, add `zizmor`).
+- **R15 - Harden supply chain + CI further** (SHA-pin GitHub Actions, add `zizmor`/`mcp-scan`;
+  the offline-resolvable parts ship, SHA-pinning needs a network pass).
+- **R2++ - `PostToolUse` verify** wiring so changed-scope sensors run after each edit.
 
-### Strategic bets
-- **R2+ - Wire `casa verify` into CI and `PostToolUse`.** Run changed-scope sensors after
-  edits and in CI so gates actually fail builds.
-- **R7 - Ship an MCP server** (stdio) exposing capsules, registry, sensors and gates as
-  Tools/Resources/Prompts. Read-only first; treat tool descriptions as untrusted.
-- **R9 - Compile the repo map from real code** with tree-sitter + PageRank (Aider-style),
-  emitting `symbols.index.json`, `call-graph.json`, `dependency-graph.json`,
-  `api-surface.json`. Keep the dependency opt-in.
-
-### Lower priority / later
-- **R11** content freshness (source<->context hash drift), **R13** already largely done
-  (skills follow `SKILL.md`), **R14** OpenSpec-style spec-delta for modernization,
-  **R16** LLM-as-judge over deterministic sensors.
+### Deferred
+- **R13** already done (skills follow `SKILL.md`).
+- **R16 - LLM-as-judge over deterministic sensors.** Deferred: requires an external model
+  provider and API keys, which would break the zero-dependency footprint. Revisit as an
+  optional plugin.
 
 ## Adoption blind spots to address
 

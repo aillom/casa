@@ -2,6 +2,15 @@
 
 All notable changes to C.A.S.A will be documented in this file.
 
+## 0.4.0
+
+- Compile a real repo map from source with a zero-dependency scanner: `casa context build` emits ranked `modules.md`, `dependency-map.md` and code-intelligence JSON (symbols, dependency graph, API surface), and `casa context check` reports drift against a content hash.
+- `casa init --mode brownfield|hybrid` now performs discovery, populating the repo map and a heuristic legacy inventory from the target codebase instead of copying placeholders.
+- Add a mechanical risk model: `casa risk assess <path...>` classifies paths into low/medium/high/critical from `protected_paths` and sensitive areas, and high/critical missions now require an approval recorded by a different actor than the implementer (segregation of duties) before `mission close`.
+- Compile skills and subagents into `.claude/agents/*.md` with least-privilege tool allowlists (read-only review/exploration agents cannot edit).
+- Add an OpenSpec-style behavior delta unit for modernization: `casa spec delta <slug>` (ADDED/MODIFIED/REMOVED), validated by `casa spec check`.
+- Run `casa verify` in CI. Note: an LLM-as-judge evaluation layer is intentionally deferred (it requires an external model provider and would break the zero-dependency footprint).
+
 ## 0.3.0
 
 - Turn missions into a runtime state machine: `casa mission new|start|advance|close|evidence|status|list` with validated transitions (planned -> active -> review -> done) and frontmatter-tracked status.

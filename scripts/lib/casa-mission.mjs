@@ -2,6 +2,7 @@ import crypto from "node:crypto"
 import fs from "node:fs"
 import path from "node:path"
 import { parseFrontmatter, runSensors } from "./casa-verify.mjs"
+import { needsSegregatedApproval } from "./casa-risk.mjs"
 
 const missionsRoot = ".casa/runtime/missions"
 const statuses = ["proposed", "planned", "active", "review", "done", "blocked"]
@@ -100,7 +101,7 @@ export function readMission(cwd, id) {
   }
 }
 
-export function createMission({ cwd = process.cwd(), slug, title = "", mode = "greenfield", spec = "" }) {
+export function createMission({ cwd = process.cwd(), slug, title = "", mode = "greenfield", spec = "", risk = "low" }) {
   const normalized = normalizeSlug(slug)
   if (!normalized) {
     throw new Error("Mission slug is required.")
@@ -125,7 +126,7 @@ export function createMission({ cwd = process.cwd(), slug, title = "", mode = "g
     .replace("- Mode: greenfield | brownfield | hybrid", `- Mode: ${mode}`)
     .replace("- Status: proposed | planned | active | blocked | review | done", "- Status: planned (tracked in frontmatter)")
 
-  const frontmatter = `---\nid: ${id}\ntitle: ${resolvedTitle}\nmode: ${mode}\nstatus: planned\nspec: ${spec}\ncreated: ${today()}\n---\n\n`
+  const frontmatter = `---\nid: ${id}\ntitle: ${resolvedTitle}\nmode: ${mode}\nstatus: planned\nrisk: ${risk}\nspec: ${spec}\ncreated: ${today()}\n---\n\n`
 
   fs.mkdirSync(missionDir(cwd), { recursive: true })
   fs.writeFileSync(filePath, frontmatter + body)
@@ -152,7 +153,7 @@ export function readEvidence(cwd, id) {
     .map((line) => JSON.parse(line))
 }
 
-export function recordEvidence({ cwd = process.cwd(), id, type = "note", note = "", verify = false, strict = false }) {
+export function recordEvidence({ cwd = process.cwd(), id, type = "note", note = "", verify = false, strict = false, actor = "unknown" }) {
   const mission = readMission(cwd, id)
   if (!mission) {
     throw new Error(`Mission not found: ${id}`)
@@ -163,6 +164,7 @@ export function recordEvidence({ cwd = process.cwd(), id, type = "note", note = 
     missionId: id,
     missionStatus: mission.status,
     type,
+    actor,
     note,
     policyHash: policyHash(cwd)
   }
@@ -197,8 +199,26 @@ export function transitionMission({ cwd = process.cwd(), id, action }) {
     throw new Error(`Cannot ${action} mission "${id}" from status "${mission.status}" (expected ${rule.from.join(" or ")}).`)
   }
 
-  if (action === "close" && readEvidence(cwd, id).length === 0) {
-    throw new Error(`Cannot close mission "${id}": record evidence first with \`casa mission evidence ${id}\`.`)
+  if (action === "close") {
+    const evidence = readEvidence(cwd, id)
+    if (evidence.length === 0) {
+      throw new Error(`Cannot close mission "${id}": record evidence first with \`casa mission evidence ${id}\`.`)
+    }
+
+    const tier = typeof mission.meta.risk === "string" ? mission.meta.risk : "low"
+    if (needsSegregatedApproval(tier)) {
+      const implementers = new Set(
+        evidence.filter((entry) => entry.type !== "approval" && entry.actor).map((entry) => entry.actor)
+      )
+      const distinctApproval = evidence.find(
+        (entry) => entry.type === "approval" && entry.actor && !implementers.has(entry.actor)
+      )
+      if (!distinctApproval) {
+        throw new Error(
+          `Cannot close ${tier}-risk mission "${id}": segregation of duties requires an approval from a different actor than the implementer. Run \`casa mission approve ${id} --actor <reviewer>\`.`
+        )
+      }
+    }
   }
 
   setStatus(cwd, id, rule.to)

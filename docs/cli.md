@@ -128,6 +128,31 @@ Runs governance sensors and blocks on failures by exit code. Sensors live in
 `--changed` only runs sensors whose `when` globs match files changed against git HEAD.
 `--strict` treats skipped sensors as failures. Results are recorded in the harness ledger.
 
+### `casa context`
+
+Compiles a repo map from real source code (zero-dependency scan) and checks its freshness.
+
+```bash
+./casa context build [--map-tokens 50]
+./casa context check
+```
+
+`build` extracts top-level symbols and import edges, ranks files by inbound imports, and writes
+`.casa/context/repo-map/*` plus `.casa/context/code-intelligence/*.json`. `check` exits non-zero
+when the source has drifted from the last build. `casa init --mode brownfield` runs this
+automatically against the target repository.
+
+### `casa risk`
+
+Classifies one or more paths into a risk tier from `casa.manifest.yaml` protected paths and
+sensitive areas.
+
+```bash
+./casa risk assess src/auth/login.ts .casa/kernel/policies/secure-coding.md
+```
+
+High and critical risk drives segregation of duties on `casa mission close` (see below).
+
 ### `casa spec`
 
 Drives the gated `spec -> plan -> tasks -> implement` loop over a work unit in
@@ -138,6 +163,7 @@ placeholders and is marked `status: ready` in its frontmatter.
 ./casa spec new auth-login --title "Auth Login" --mode greenfield
 ./casa spec plan auth-login
 ./casa spec tasks auth-login
+./casa spec delta auth-login         # OpenSpec-style ADDED/MODIFIED/REMOVED for modernization
 ./casa spec check auth-login
 ./casa spec implement auth-login
 ./casa spec list
@@ -282,14 +308,19 @@ Creates and drives missions as a runtime state machine over
 `.casa/runtime/missions/<id>.md` (status tracked in frontmatter).
 
 ```bash
-./casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield
+./casa mission new invoice-dashboard --title "Invoice Dashboard" --mode greenfield --risk high
 ./casa mission start invoice-dashboard      # planned -> active
 ./casa mission advance invoice-dashboard    # active -> review
-./casa mission evidence invoice-dashboard --note "validated" --verify
-./casa mission close invoice-dashboard      # review -> done (requires evidence)
+./casa mission evidence invoice-dashboard --note "validated" --verify --actor dev@example.com
+./casa mission approve invoice-dashboard --actor reviewer@example.com
+./casa mission close invoice-dashboard      # review -> done (requires evidence; approval if high/critical)
 ./casa mission status invoice-dashboard
 ./casa mission list
 ```
+
+For high or critical risk missions, `close` requires an approval recorded by a different actor
+than the implementer (segregation of duties). The actor defaults to `git config user.email` or
+the `CASA_ACTOR` environment variable.
 
 `mission evidence` appends to a per-mission ledger
 (`.casa/runtime/missions/<id>.evidence.jsonl`) with a timestamp, the current status, a policy

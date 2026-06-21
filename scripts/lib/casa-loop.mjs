@@ -198,6 +198,39 @@ created: ${today()}
 `
 }
 
+function deltaTemplate({ slug, title }) {
+  return `---
+slug: ${slug}
+title: ${title}
+phase: delta
+status: draft
+created: ${today()}
+---
+
+# Behavior Delta: ${title}
+
+> OpenSpec-style change unit for modernization. Capture each behavior change so a reviewer can
+> see exactly what is added, modified or removed. Remove every \`<...>\` placeholder when ready.
+
+## ADDED
+
+- AD1: WHEN <new trigger> THE SYSTEM SHALL <new behavior>
+
+## MODIFIED
+
+- MO1: <previous behavior> now <new behavior>
+
+## REMOVED
+
+- RM1: <behavior being retired>, with migration and rollback
+
+## Validation
+
+- [ ] Characterization tests cover MODIFIED and REMOVED behavior
+- [ ] Rollback path documented
+`
+}
+
 function requireReady(cwd, slug, phase) {
   const doc = readPhase(cwd, slug, phase)
   if (!doc.exists) {
@@ -277,6 +310,23 @@ export function createTasks({ cwd = process.cwd(), slug, force = false }) {
   return { slug: normalized, filePath }
 }
 
+export function createDelta({ cwd = process.cwd(), slug, force = false }) {
+  const normalized = normalizeSlug(slug)
+  if (!normalized) {
+    throw new Error("Spec slug is required.")
+  }
+
+  const dir = unitDir(cwd, normalized)
+  const filePath = path.join(dir, "delta.md")
+  if (fs.existsSync(filePath) && !force) {
+    throw new Error(`Delta already exists: ${path.relative(cwd, filePath)}`)
+  }
+
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(filePath, deltaTemplate({ slug: normalized, title: specTitle(cwd, normalized) }))
+  return { slug: normalized, filePath }
+}
+
 export function implementWorkUnit({ cwd = process.cwd(), slug, changed = false, strict = false }) {
   const normalized = normalizeSlug(slug)
   requireReady(cwd, normalized, "spec")
@@ -332,7 +382,23 @@ export function checkWorkUnit({ cwd = process.cwd(), slug }) {
     }
   }
 
-  return { slug: normalized, exists: true, errors, warnings, criteria, coverage }
+  let delta = null
+  const deltaFile = path.join(unitDir(cwd, normalized), "delta.md")
+  if (fs.existsSync(deltaFile)) {
+    const content = fs.readFileSync(deltaFile, "utf8")
+    for (const section of ["ADDED", "MODIFIED", "REMOVED"]) {
+      if (!new RegExp(`^## ${section}`, "m").test(content)) {
+        errors.push(`Behavior delta is missing the ${section} section`)
+      }
+    }
+    delta = {
+      added: (content.match(/^- AD\d+:/gm) || []).length,
+      modified: (content.match(/^- MO\d+:/gm) || []).length,
+      removed: (content.match(/^- RM\d+:/gm) || []).length
+    }
+  }
+
+  return { slug: normalized, exists: true, errors, warnings, criteria, coverage, delta }
 }
 
 export function workUnitStatus({ cwd = process.cwd(), slug }) {
